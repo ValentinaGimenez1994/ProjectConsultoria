@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Project Consultoría — Generador de Plannings</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#f4f6f8;color:#1a2e2e;min-height:100vh}
+.topbar{background:#1a2e2e;padding:14px 32px;display:flex;align-items:center;gap:12px}
+.topbar-title{color:#fff;font-size:17px;font-weight:600;letter-spacing:.01em}
+.topbar-sub{color:#02c39a;font-size:12px;font-weight:500;letter-spacing:.05em;text-transform:uppercase}
+.container{max-width:1100px;margin:0 auto;padding:28px 20px}
+.tabs{display:flex;gap:2px;background:#e8ecee;border-radius:10px;padding:4px;margin-bottom:24px}
+.tab{flex:1;padding:9px 12px;font-size:13px;cursor:pointer;border:none;background:none;color:#6e7c7c;border-radius:7px;font-weight:500;transition:all .15s}
+.tab.active{background:#fff;color:#028090;box-shadow:0 1px 4px rgba(0,0,0,.1)}
+.tab i{margin-right:5px}
+.section{display:none}.section.active{display:block}
+.card{background:#fff;border:1px solid #e2e8ea;border-radius:12px;padding:20px 22px;margin-bottom:16px}
+.card-title{font-size:11px;font-weight:600;color:#028090;text-transform:uppercase;letter-spacing:.08em;margin-bottom:16px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.field{display:flex;flex-direction:column;gap:5px}
+.field label{font-size:12px;color:#6e7c7c;font-weight:500}
+.field input,.field select,.field textarea{width:100%;padding:8px 11px;font-size:13px;border:1px solid #d0d8dc;border-radius:8px;background:#fff;color:#1a2e2e;transition:border .15s}
+.field input:focus,.field select:focus{outline:none;border-color:#028090;box-shadow:0 0 0 3px rgba(2,128,144,.1)}
+.btn{padding:9px 18px;border-radius:8px;font-size:13px;cursor:pointer;border:1px solid #d0d8dc;background:#fff;color:#1a2e2e;font-weight:500;transition:all .15s;display:inline-flex;align-items:center;gap:6px}
+.btn:hover{background:#f4f6f8;border-color:#b0bcc0}
+.btn-primary{background:#028090;color:#fff;border-color:#028090}
+.btn-primary:hover{background:#026a78;border-color:#026a78}
+.btn-sm{padding:6px 12px;font-size:12px}
+.btn-danger{border-color:#f09595;color:#a32d2d}
+.btn-danger:hover{background:#fcebeb}
+.btn-row{display:flex;gap:8px;justify-content:flex-end;margin-top:16px;flex-wrap:wrap}
+.badge{display:inline-block;padding:2px 9px;border-radius:99px;font-size:11px;font-weight:600}
+.badge-red{background:#fcebeb;color:#a32d2d}
+.badge-amber{background:#faeeda;color:#854f0b}
+.badge-green{background:#eaf3de;color:#3b6d11}
+.badge-blue{background:#e6f1fb;color:#185fa5}
+.badge-gray{background:#f1efe8;color:#5f5e5a}
+.badge-teal{background:#e1f5ee;color:#0f6e56}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{text-align:left;padding:10px 12px;background:#f4f6f8;color:#6e7c7c;font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.05em;border-bottom:1px solid #e2e8ea}
+td{padding:10px 12px;border-bottom:1px solid #f0f3f4;color:#1a2e2e;vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#fafcfc}
+.stat{background:#f4f6f8;border-radius:10px;padding:16px;text-align:center}
+.stat-val{font-size:28px;font-weight:700;color:#028090}
+.stat-lbl{font-size:11px;color:#6e7c7c;margin-top:4px;font-weight:500}
+.gantt-bar{height:20px;border-radius:4px;display:inline-block;min-width:4px}
+.gantt-wrap{overflow-x:auto;padding-bottom:4px}
+.risk-item{padding:14px 0;border-bottom:1px solid #f0f3f4;display:flex;gap:12px;align-items:flex-start}
+.risk-item:last-child{border-bottom:none}
+.msg{padding:10px 14px;border-radius:8px;font-size:13px;margin-top:12px;display:none}
+.msg-success{background:#eaf3de;color:#3b6d11}
+.msg-error{background:#fcebeb;color:#a32d2d;display:block}
+.divider{height:1px;background:#f0f3f4;margin:16px 0}
+.empty-state{text-align:center;padding:60px 20px;color:#6e7c7c}
+.empty-state i{font-size:48px;display:block;margin-bottom:16px;color:#d0d8dc}
+.empty-state p{font-size:14px}
+input[type=number]{-moz-appearance:textfield}
+.est-input{width:58px!important;padding:4px 6px!important;font-size:12px!important;text-align:center}
+@media(max-width:700px){.grid2,.grid3,.grid4{grid-template-columns:1fr}.tabs{flex-direction:column}.tab{text-align:left}}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div>
+    <div class="topbar-sub">Herramienta interna</div>
+    <div class="topbar-title"><i class="ti ti-calendar-stats"></i> Project Consultoría — Generador de Plannings</div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('nuevo')"><i class="ti ti-plus"></i> Nuevo proyecto</button>
+    <button class="tab" onclick="switchTab('estimaciones')"><i class="ti ti-settings"></i> Estimaciones base</button>
+    <button class="tab" onclick="switchTab('planning')"><i class="ti ti-calendar"></i> Planning generado</button>
+    <button class="tab" onclick="switchTab('riesgos')"><i class="ti ti-alert-triangle"></i> Riesgos <span id="risk-badge"></span></button>
+  </div>
+
+  <!-- NUEVO PROYECTO -->
+  <div id="tab-nuevo" class="section active">
+    <div class="card">
+      <div class="card-title">Datos del proyecto</div>
+      <div class="grid2" style="margin-bottom:14px">
+        <div class="field"><label>Nombre del proyecto *</label><input id="p-nombre" type="text" placeholder="Ej: Implementación xDoc Global — ACME Corp"></div>
+        <div class="field"><label>Cliente *</label><input id="p-cliente" type="text" placeholder="Ej: ACME Corp S.A."></div>
+      </div>
+      <div class="grid3" style="margin-bottom:14px">
+        <div class="field"><label>País *</label>
+          <select id="p-pais">
+            <option value="">Seleccionar...</option>
+            <option>Paraguay</option><option>Uruguay</option><option>Argentina</option>
+            <option>Chile</option><option>Brasil</option><option>Colombia</option>
+            <option>México</option><option>Perú</option><option>Bolivia</option><option>Otro</option>
+          </select>
+        </div>
+        <div class="field"><label>Producto *</label>
+          <select id="p-producto">
+            <option value="">Seleccionar...</option>
+            <option>xDoc Global</option><option>ioFacturo</option><option>API Emisión</option>
+            <option>API Recepción</option><option>xPos</option><option>SSO</option><option>Smart Supply</option>
+          </select>
+        </div>
+        <div class="field"><label>Consultor a cargo *</label><input id="p-consultor" type="text" placeholder="Nombre del consultor"></div>
+      </div>
+      <div class="grid3">
+        <div class="field"><label>Fecha de inicio *</label><input id="p-fecha" type="date"></div>
+        <div class="field"><label>PMO (opcional)</label><input id="p-pmo" type="text" placeholder="Nombre del PMO"></div>
+        <div class="field"><label>Account Manager (opcional)</label><input id="p-am" type="text" placeholder="Nombre del AM"></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Ajustes del planning</div>
+      <div class="grid3">
+        <div class="field"><label>Complejidad estimada</label>
+          <select id="p-complejidad">
+            <option value="1">Normal (×1.0)</option>
+            <option value="1.3">Alta (×1.3)</option>
+            <option value="1.6">Muy alta (×1.6)</option>
+          </select>
+        </div>
+        <div class="field"><label>¿Incluye integración técnica?</label>
+          <select id="p-integracion">
+            <option value="1">Sí</option>
+            <option value="0">No</option>
+          </select>
+        </div>
+        <div class="field"><label>Notas adicionales</label>
+          <input id="p-notas" type="text" placeholder="Observaciones para el planning">
+        </div>
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn" onclick="resetForm()"><i class="ti ti-refresh"></i> Limpiar</button>
+      <button class="btn btn-primary" onclick="generarPlanning()"><i class="ti ti-player-play"></i> Generar planning</button>
+    </div>
+    <div id="msg-nuevo" class="msg"></div>
+  </div>
+
+  <!-- ESTIMACIONES -->
+  <div id="tab-estimaciones" class="section">
+    <div class="card">
+      <div class="card-title">Estimaciones base por producto (días hábiles por fase)</div>
+      <div style="overflow-x:auto">
+        <table id="est-table">
+          <thead><tr>
+            <th style="min-width:130px">Producto</th>
+            <th>Inicio</th><th>Integración</th><th>Implementación</th>
+            <th>SIT</th><th>UAT</th><th>Cutover</th><th>Go Live</th><th>Hypercare</th>
+            <th>Total</th>
+          </tr></thead>
+          <tbody id="est-body"></tbody>
+        </table>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-sm" onclick="resetEstimaciones()"><i class="ti ti-refresh"></i> Restaurar defaults</button>
+        <button class="btn btn-sm btn-primary" onclick="guardarEst()"><i class="ti ti-device-floppy"></i> Guardar cambios</button>
+      </div>
+      <div id="msg-est" class="msg"></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Multiplicadores por país</div>
+      <div id="pais-grid" class="grid4" style="gap:12px"></div>
+      <div class="btn-row">
+        <button class="btn btn-sm btn-primary" onclick="guardarPaises()"><i class="ti ti-device-floppy"></i> Guardar multiplicadores</button>
+      </div>
+      <p style="font-size:11px;color:#6e7c7c;margin-top:10px">Los multiplicadores ajustan los días base según la complejidad regulatoria y operativa de cada país. 1.0 = sin ajuste.</p>
+    </div>
+  </div>
+
+  <!-- PLANNING -->
+  <div id="tab-planning" class="section">
+    <div id="planning-placeholder" class="empty-state">
+      <i class="ti ti-calendar"></i>
+      <p>Completá los datos del proyecto y presioná <strong>Generar planning</strong></p>
+    </div>
+    <div id="planning-content" style="display:none">
+      <div class="grid4" id="plan-stats" style="margin-bottom:16px"></div>
+      <div class="card">
+        <div class="card-title">Información del proyecto</div>
+        <div id="plan-info" class="grid3"></div>
+      </div>
+      <div class="card">
+        <div class="card-title">Gantt — vista por fases</div>
+        <div class="gantt-wrap">
+          <table id="gantt-table" style="min-width:680px">
+            <thead><tr>
+              <th style="width:130px">Fase</th>
+              <th style="width:90px">Inicio</th>
+              <th style="width:90px">Fin</th>
+              <th style="width:60px">Días</th>
+              <th>Línea de tiempo</th>
+            </tr></thead>
+            <tbody id="gantt-body"></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Tareas detalladas</div>
+        <div style="overflow-x:auto">
+          <table id="tasks-table">
+            <thead><tr>
+              <th style="width:36px">#</th>
+              <th>Tarea</th><th style="width:120px">Fase</th>
+              <th style="width:160px">Responsable</th>
+              <th style="width:50px">Días</th>
+              <th style="width:90px">Inicio</th>
+              <th style="width:90px">Fin</th>
+            </tr></thead>
+            <tbody id="tasks-body"></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-sm" onclick="exportExcel()"><i class="ti ti-file-spreadsheet"></i> Exportar Excel</button>
+        <button class="btn btn-sm" onclick="exportMPP()"><i class="ti ti-download"></i> Exportar .XML (MS Project)</button>
+        <button class="btn btn-sm btn-primary" onclick="window.print()"><i class="ti ti-printer"></i> Imprimir / Guardar PDF</button>
+      </div>
+      <p style="font-size:11px;color:#6e7c7c;text-align:right;margin-top:6px">El archivo XML es compatible con MS Project. Abrilo desde Archivo → Abrir en MS Project.</p>
+    </div>
+  </div>
+
+  <!-- RIESGOS -->
+  <div id="tab-riesgos" class="section">
+    <div id="riesgos-placeholder" class="empty-state">
+      <i class="ti ti-shield"></i>
+      <p>Generá un planning para ver los riesgos detectados automáticamente</p>
+    </div>
+    <div id="riesgos-content" style="display:none">
+      <div class="card">
+        <div class="card-title">Riesgos detectados automáticamente</div>
+        <div id="riesgos-lista"></div>
+      </div>
+      <div class="card">
+        <div class="card-title">Agregar riesgo manual</div>
+        <div class="grid2" style="margin-bottom:12px">
+          <div class="field"><label>Descripción del riesgo</label><input id="r-desc" type="text" placeholder="Ej: Dependencia de área de TI del cliente"></div>
+          <div class="field"><label>Impacto</label>
+            <select id="r-impacto"><option>Alto</option><option>Medio</option><option>Bajo</option></select>
+          </div>
+        </div>
+        <div class="field" style="margin-bottom:12px"><label>Mitigación sugerida</label>
+          <input id="r-mit" type="text" placeholder="Ej: Agendar reunión de alineación técnica en semana 1">
+        </div>
+        <button class="btn btn-sm btn-primary" onclick="agregarRiesgoManual()"><i class="ti ti-plus"></i> Agregar riesgo</button>
+      </div>
+      <div id="riesgos-manuales-card" class="card" style="display:none">
+        <div class="card-title">Riesgos agregados manualmente</div>
+        <div id="riesgos-manuales"></div>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-sm" onclick="exportRiesgos()"><i class="ti ti-file-spreadsheet"></i> Exportar riesgos Excel</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const FASES=['Inicio','Integración','Implementación','SIT','UAT','Cutover','Go Live','Hypercare'];
+const KEYS=['inicio','integracion','implementacion','sit','uat','cutover','golive','hypercare'];
+const COLORES=['#028090','#00A896','#02C39A','#185FA5','#3B6D11','#854F0B','#A32D2D','#1A2E2E'];
+
+const DEF_EST={
+  'xDoc Global':    {inicio:3,integracion:5,implementacion:10,sit:5,uat:5,cutover:2,golive:1,hypercare:7},
+  'ioFacturo':      {inicio:3,integracion:7,implementacion:14,sit:7,uat:7,cutover:3,golive:1,hypercare:10},
+  'API Emisión':    {inicio:2,integracion:8,implementacion:12,sit:6,uat:5,cutover:2,golive:1,hypercare:7},
+  'API Recepción':  {inicio:2,integracion:8,implementacion:12,sit:6,uat:5,cutover:2,golive:1,hypercare:7},
+  'xPos':           {inicio:3,integracion:4,implementacion:8,sit:4,uat:4,cutover:2,golive:1,hypercare:5},
+  'SSO':            {inicio:2,integracion:3,implementacion:6,sit:3,uat:3,cutover:1,golive:1,hypercare:5},
+  'Smart Supply':   {inicio:4,integracion:8,implementacion:15,sit:7,uat:7,cutover:3,golive:1,hypercare:10},
+};
+const DEF_PAISES={Paraguay:1.0,Uruguay:1.0,Argentina:1.1,Chile:1.0,Brasil:1.3,Colombia:1.1,México:1.2,Perú:1.1,Bolivia:1.15,Otro:1.1};
+
+const RIESGOS_PROD={
+  'xDoc Global':['Dependencia de actualización de versión del proveedor de facturación','Configuración de certificados digitales puede requerir intervención del área legal'],
+  'ioFacturo':['Integración con SAP puede generar retrasos por disponibilidad del equipo técnico cliente','Cambios normativos del SET pueden impactar el scope durante la implementación'],
+  'API Emisión':['Disponibilidad de ambientes de testing del cliente puede no estar garantizada','Cambios en la API del cliente pueden requerir refactorización'],
+  'API Recepción':['Validación de formato de comprobantes puede variar por rubro del cliente','Coordinación con proveedor de ERP puede extender los plazos'],
+  'xPos':['Disponibilidad de dispositivos físicos para pruebas puede ser limitada','Capacitación de usuarios finales requiere coordinar múltiples locales'],
+  'SSO':['Integración con Active Directory del cliente puede generar demoras','Políticas de seguridad del cliente pueden restringir la configuración'],
+  'Smart Supply':['Mapeo de cadena de suministro puede ser más complejo de lo estimado','Validación con múltiples proveedores extiende los plazos de SIT/UAT'],
+};
+const RIESGOS_PAIS={Brasil:['Complejidad regulatoria fiscal elevada: puede requerir consulta legal adicional'],México:['Normativa del SAT en constante cambio: monitorear actualizaciones durante la implementación'],Argentina:['Entorno económico variable: prever impacto en tiempos de aprobación internos del cliente']};
+const TAREAS_TMPL={
+  'Inicio':[{t:'Kickoff del proyecto',r:'Consultor + Cliente'},{t:'Relevamiento de requerimientos funcionales',r:'Consultor'},{t:'Definición del plan de comunicación',r:'PMO'}],
+  'Integración':[{t:'Configuración de ambiente de desarrollo',r:'Consultor'},{t:'Desarrollo de integración técnica',r:'Consultor + TI Cliente'},{t:'Revisión de conectividad y endpoints',r:'Consultor'}],
+  'Implementación':[{t:'Configuración del producto en ambiente QA',r:'Consultor'},{t:'Carga y validación de datos maestros',r:'Consultor + Cliente'},{t:'Configuración de flujos y reglas de negocio',r:'Consultor'},{t:'Documentación técnica y funcional',r:'Consultor'}],
+  'SIT':[{t:'Ejecución de casos de prueba SIT',r:'Consultor'},{t:'Registro y resolución de incidencias SIT',r:'Consultor'}],
+  'UAT':[{t:'Capacitación a usuarios clave',r:'Consultor'},{t:'Ejecución de pruebas de aceptación UAT',r:'Cliente'},{t:'Firma de aceptación UAT',r:'PMO + Cliente'}],
+  'Cutover':[{t:'Plan de pase a producción',r:'Consultor + PMO'},{t:'Migración y configuración en PRD',r:'Consultor'}],
+  'Go Live':[{t:'Activación en producción',r:'Consultor'},{t:'Monitoreo de primeras operaciones',r:'Consultor + Cliente'}],
+  'Hypercare':[{t:'Soporte post go-live',r:'Consultor'},{t:'Revisión de incidencias y ajustes',r:'Consultor'},{t:'Cierre formal del proyecto',r:'PMO + Cliente'}],
+};
+const FASE_BADGE={'Inicio':'badge-blue','Integración':'badge-gray','Implementación':'badge-blue','SIT':'badge-amber','UAT':'badge-amber','Cutover':'badge-red','Go Live':'badge-green','Hypercare':'badge-teal'};
+
+let est=JSON.parse(JSON.stringify(DEF_EST));
+let paises=JSON.parse(JSON.stringify(DEF_PAISES));
+let planData=null,rAuto=[],rManuales=[];
+
+function switchTab(t){
+  const names=['nuevo','estimaciones','planning','riesgos'];
+  document.querySelectorAll('.tab').forEach((b,i)=>b.classList.toggle('active',names[i]===t));
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.getElementById('tab-'+t).classList.add('active');
+}
+
+function showMsg(id,txt,ok=true){const e=document.getElementById(id);e.className='msg '+(ok?'msg-success':'msg-error');e.textContent=txt;e.style.display=txt?'block':'none';}
+
+function addWD(date,days){
+  if(days<=0)return new Date(date);
+  let d=new Date(date),added=0;
+  while(added<days){d.setDate(d.getDate()+1);if(d.getDay()!==0&&d.getDay()!==6)added++;}
+  return d;
+}
+function fmt(d){if(!d)return'—';return d.toISOString().split('T')[0];}
+
+function generarPlanning(){
+  const nom=document.getElementById('p-nombre').value.trim();
+  const cli=document.getElementById('p-cliente').value.trim();
+  const pais=document.getElementById('p-pais').value;
+  const prod=document.getElementById('p-producto').value;
+  const cons=document.getElementById('p-consultor').value.trim();
+  const fecha=document.getElementById('p-fecha').value;
+  const pmo=document.getElementById('p-pmo').value.trim()||'PMO';
+  const am=document.getElementById('p-am').value.trim();
+  const compx=+document.getElementById('p-complejidad').value;
+  const conInt=document.getElementById('p-integracion').value==='1';
+  const notas=document.getElementById('p-notas').value.trim();
+
+  if(!nom||!cli||!pais||!prod||!cons||!fecha){showMsg('msg-nuevo','Completá todos los campos obligatorios (*)',false);return;}
+
+  const e=est[prod],mult=paises[pais]||1;
+  const base={};
+  KEYS.forEach(k=>{
+    let d=Math.round((e[k]||0)*mult*compx);
+    if(k==='integracion'&&!conInt)d=0;
+    base[k]=k==='integracion'&&!conInt?0:Math.max(1,d);
+  });
+
+  let cur=new Date(fecha);
+  const fases=[];
+  FASES.forEach((nf,i)=>{
+    const key=KEYS[i],dias=base[key];
+    if(dias===0){fases.push({fase:nf,inicio:null,fin:null,dias:0});return;}
+    const ini=new Date(cur),fin=addWD(ini,dias-1);
+    fases.push({fase:nf,inicio:ini,fin,dias});
+    cur=addWD(fin,1);
+  });
+
+  const tareas=[];let idx=1;
+  fases.forEach(f=>{
+    if(!f.dias)return;
+    const tmpl=TAREAS_TMPL[f.fase]||[];
+    const dpt=Math.max(1,Math.floor(f.dias/Math.max(tmpl.length,1)));
+    let c=new Date(f.inicio);
+    tmpl.forEach((t,ti)=>{
+      const isLast=ti===tmpl.length-1;
+      const fin=isLast?new Date(f.fin):addWD(c,dpt-1);
+      const resp=t.r.replace(/Consultor/g,cons).replace(/PMO/g,pmo);
+      tareas.push({id:idx++,tarea:t.t,fase:f.fase,responsable:resp,dias:dpt,inicio:new Date(c),fin:new Date(fin)});
+      c=addWD(fin,1);
+    });
+  });
+
+  const totalDias=fases.reduce((s,f)=>s+f.dias,0);
+  const fechaFin=fases.filter(f=>f.fin).slice(-1)[0]?.fin;
+  planData={nom,cli,pais,prod,cons,pmo,am,notas,fases,tareas,totalDias,fechaInicio:new Date(fecha),fechaFin,compx,conInt};
+
+  detectarRiesgos(prod,pais,totalDias,conInt,compx);
+  renderPlanning();
+  showMsg('msg-nuevo','');
+  switchTab('planning');
+  document.getElementById('planning-placeholder').style.display='none';
+  document.getElementById('planning-content').style.display='block';
+}
+
+function detectarRiesgos(prod,pais,dias,conInt,compx){
+  rAuto=[];
+  (RIESGOS_PROD[prod]||[]).forEach(txt=>rAuto.push({txt,impacto:'Medio',tipo:'Producto',mit:'Identificar dependencias en reunión de kickoff y escalar a PMO de ser necesario.'}));
+  if(!conInt)rAuto.push({txt:'Sin fase de integración técnica: validar que la conectividad del cliente esté resuelta de antemano',impacto:'Alto',tipo:'Técnico',mit:'Solicitar confirmación técnica escrita antes del inicio del proyecto.'});
+  if(compx>=1.3)rAuto.push({txt:'Complejidad alta: el planning tiene margen reducido para imprevistos',impacto:'Alto',tipo:'Gestión',mit:'Revisar el planning cada 2 semanas con el equipo y cliente.'});
+  if(dias>=60)rAuto.push({txt:'Proyecto de larga duración: riesgo de cambio de interlocutores o prioridades',impacto:'Medio',tipo:'Cronograma',mit:'Establecer checkpoints quincenales con el cliente y revisar hitos.'});
+  if(dias>=90)rAuto.push({txt:'Duración extendida: se recomienda revisión formal del planning a mitad de proyecto',impacto:'Alto',tipo:'Cronograma',mit:'Agendar reunión de revisión de planning en semana 6.'});
+  (RIESGOS_PAIS[pais]||[]).forEach(txt=>rAuto.push({txt,impacto:'Alto',tipo:'Regulatorio',mit:'Coordinar con equipo legal/compliance antes del inicio.'}));
+  updateBadge();
+  renderRiesgos();
+}
+
+function updateBadge(){
+  const total=rAuto.length+rManuales.length;
+  document.getElementById('risk-badge').innerHTML=total?`<span class="badge badge-red" style="font-size:10px;vertical-align:middle">${total}</span>`:'';
+}
+
+function renderPlanning(){
+  const p=planData;
+  document.getElementById('plan-stats').innerHTML=`
+    <div class="stat"><div class="stat-val">${p.totalDias}</div><div class="stat-lbl">Días hábiles</div></div>
+    <div class="stat"><div class="stat-val">${p.fases.filter(f=>f.dias>0).length}</div><div class="stat-lbl">Fases activas</div></div>
+    <div class="stat"><div class="stat-val">${p.tareas.length}</div><div class="stat-lbl">Tareas</div></div>
+    <div class="stat"><div class="stat-val">${rAuto.length+rManuales.length}</div><div class="stat-lbl">Riesgos</div></div>`;
+  document.getElementById('plan-info').innerHTML=`
+    <div class="field"><label>Proyecto</label><div style="font-size:14px;font-weight:600;margin-top:2px">${p.nom}</div></div>
+    <div class="field"><label>Cliente</label><div style="font-size:13px;margin-top:2px">${p.cli} — ${p.pais}</div></div>
+    <div class="field"><label>Producto / Consultor</label><div style="font-size:13px;margin-top:2px">${p.prod} / ${p.cons}</div></div>
+    <div class="field"><label>Fecha inicio</label><div style="font-size:13px;margin-top:2px">${fmt(p.fechaInicio)}</div></div>
+    <div class="field"><label>Fecha fin estimada</label><div style="font-size:13px;font-weight:600;color:#028090;margin-top:2px">${fmt(p.fechaFin)}</div></div>
+    ${p.notas?`<div class="field"><label>Notas</label><div style="font-size:12px;color:#6e7c7c;margin-top:2px">${p.notas}</div></div>`:''}`;
+
+  const maxD=p.totalDias;
+  let gHtml='',off=0;
+  p.fases.forEach((f,i)=>{
+    if(!f.dias)return;
+    const w=Math.max(3,Math.round((f.dias/maxD)*480));
+    const ml=Math.round((off/maxD)*480);
+    gHtml+=`<tr><td style="font-weight:500;font-size:13px">${f.fase}</td>
+      <td style="font-size:12px;color:#6e7c7c">${fmt(f.inicio)}</td>
+      <td style="font-size:12px;color:#6e7c7c">${fmt(f.fin)}</td>
+      <td style="font-weight:600;color:#028090">${f.dias}</td>
+      <td><div style="margin-left:${ml}px;width:${w}px;height:20px;border-radius:4px;background:${COLORES[i%COLORES.length]}"></div></td></tr>`;
+    off+=f.dias;
+  });
+  document.getElementById('gantt-body').innerHTML=gHtml;
+
+  let tHtml='';
+  p.tareas.forEach(t=>{
+    tHtml+=`<tr><td style="color:#6e7c7c;font-size:12px">${t.id}</td>
+      <td>${t.tarea}</td>
+      <td><span class="badge ${FASE_BADGE[t.fase]||'badge-gray'}">${t.fase}</span></td>
+      <td style="font-size:12px;color:#6e7c7c">${t.responsable}</td>
+      <td style="font-weight:600">${t.dias}</td>
+      <td style="font-size:12px">${fmt(t.inicio)}</td>
+      <td style="font-size:12px">${fmt(t.fin)}</td></tr>`;
+  });
+  document.getElementById('tasks-body').innerHTML=tHtml;
+}
+
+function renderRiesgos(){
+  document.getElementById('riesgos-placeholder').style.display='none';
+  document.getElementById('riesgos-content').style.display='block';
+  const iC={Alto:'badge-red',Medio:'badge-amber',Bajo:'badge-green'};
+  const tC={Producto:'badge-blue',Técnico:'badge-red',Gestión:'badge-amber',Cronograma:'badge-gray',Regulatorio:'badge-red'};
+  let html=rAuto.length?'':'<p style="color:#6e7c7c;font-size:13px;padding:8px 0">No se detectaron riesgos automáticos para este proyecto.</p>';
+  rAuto.forEach(r=>{
+    html+=`<div class="risk-item"><div style="flex:1">
+      <div style="display:flex;gap:6px;margin-bottom:6px">
+        <span class="badge ${tC[r.tipo]||'badge-gray'}">${r.tipo}</span>
+        <span class="badge ${iC[r.impacto]}">${r.impacto}</span>
+      </div>
+      <p style="font-size:13px;margin-bottom:5px">${r.txt}</p>
+      <p style="font-size:11px;color:#6e7c7c"><i class="ti ti-shield-check" style="font-size:12px"></i> ${r.mit}</p>
+    </div></div>`;
+  });
+  document.getElementById('riesgos-lista').innerHTML=html;
+  renderRManuales();
+}
+
+function agregarRiesgoManual(){
+  const desc=document.getElementById('r-desc').value.trim();
+  if(!desc){alert('Ingresá una descripción del riesgo.');return;}
+  rManuales.push({txt:desc,impacto:document.getElementById('r-impacto').value,mit:document.getElementById('r-mit').value.trim()||'Sin mitigación definida.',tipo:'Manual'});
+  document.getElementById('r-desc').value='';document.getElementById('r-mit').value='';
+  updateBadge();renderRManuales();
+}
+
+function renderRManuales(){
+  if(!rManuales.length){document.getElementById('riesgos-manuales-card').style.display='none';return;}
+  document.getElementById('riesgos-manuales-card').style.display='block';
+  const iC={Alto:'badge-red',Medio:'badge-amber',Bajo:'badge-green'};
+  let html='';
+  rManuales.forEach((r,i)=>{
+    html+=`<div class="risk-item"><div style="flex:1">
+      <div style="display:flex;gap:6px;margin-bottom:6px">
+        <span class="badge badge-gray">Manual</span>
+        <span class="badge ${iC[r.impacto]}">${r.impacto}</span>
+      </div>
+      <p style="font-size:13px;margin-bottom:5px">${r.txt}</p>
+      <p style="font-size:11px;color:#6e7c7c"><i class="ti ti-shield-check" style="font-size:12px"></i> ${r.mit}</p>
+    </div><button class="btn btn-sm btn-danger" onclick="elimRM(${i})"><i class="ti ti-trash"></i></button></div>`;
+  });
+  document.getElementById('riesgos-manuales').innerHTML=html;
+}
+
+function elimRM(i){rManuales.splice(i,1);updateBadge();renderRManuales();}
+
+function renderEstTable(){
+  let html='';
+  Object.keys(est).forEach(prod=>{
+    const e=est[prod];
+    const total=KEYS.reduce((s,k)=>s+(+e[k]||0),0);
+    html+=`<tr><td style="font-weight:600;font-size:13px">${prod}</td>`;
+    KEYS.forEach(k=>{html+=`<td><input class="est-input" type="number" min="0" value="${e[k]||0}" data-prod="${prod}" data-k="${k}" onchange="updEst(this)"></td>`;});
+    html+=`<td style="font-weight:700;color:#028090" id="tot-${prod.replace(/\s|\//g,'_')}">${total}</td></tr>`;
+  });
+  document.getElementById('est-body').innerHTML=html;
+  renderPaises();
+}
+
+function updEst(el){
+  est[el.dataset.prod][el.dataset.k]=+el.value||0;
+  const total=KEYS.reduce((s,k)=>s+(+est[el.dataset.prod][k]||0),0);
+  document.getElementById('tot-'+el.dataset.prod.replace(/\s|\//g,'_')).textContent=total;
+}
+
+function renderPaises(){
+  let html='';
+  Object.keys(paises).forEach(p=>{
+    html+=`<div class="field"><label>${p}</label><input type="number" step="0.05" min="0.5" max="3" value="${paises[p]}" data-p="${p}" onchange="paises[this.dataset.p]=+this.value" style="width:100%"></div>`;
+  });
+  document.getElementById('pais-grid').innerHTML=html;
+}
+
+function resetEstimaciones(){est=JSON.parse(JSON.stringify(DEF_EST));paises=JSON.parse(JSON.stringify(DEF_PAISES));renderEstTable();showMsg('msg-est','Estimaciones restauradas a los valores por defecto.');}
+function guardarEst(){showMsg('msg-est','Estimaciones guardadas para esta sesión.');}
+function guardarPaises(){showMsg('msg-est','Multiplicadores de país guardados.');}
+function resetForm(){['p-nombre','p-cliente','p-consultor','p-pmo','p-am','p-notas'].forEach(id=>document.getElementById(id).value='');['p-pais','p-producto'].forEach(id=>document.getElementById(id).value='');document.getElementById('msg-nuevo').style.display='none';}
+
+function exportExcel(){
+  if(!planData){alert('Generá un planning primero.');return;}
+  const p=planData,wb=XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet([
+    ['Proyecto',p.nom],['Cliente',p.cli],['País',p.pais],['Producto',p.prod],
+    ['Consultor',p.cons],['PMO',p.pmo],['AM',p.am],
+    ['Fecha inicio',fmt(p.fechaInicio)],['Fecha fin estimada',fmt(p.fechaFin)],
+    ['Total días hábiles',p.totalDias],['Notas',p.notas],
+  ]),'Resumen');
+  XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet([
+    ['Fase','Inicio','Fin','Días'],...p.fases.filter(f=>f.dias>0).map(f=>[f.fase,fmt(f.inicio),fmt(f.fin),f.dias])
+  ]),'Fases');
+  XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet([
+    ['#','Tarea','Fase','Responsable','Días','Inicio','Fin'],
+    ...p.tareas.map(t=>[t.id,t.tarea,t.fase,t.responsable,t.dias,fmt(t.inicio),fmt(t.fin)])
+  ]),'Tareas');
+  XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet([
+    ['Tipo','Descripción','Impacto','Mitigación'],
+    ...rAuto.concat(rManuales).map(r=>[r.tipo,r.txt,r.impacto,r.mit])
+  ]),'Riesgos');
+  XLSX.writeFile(wb,`Planning_${p.nom.replace(/\s/g,'_')}.xlsx`);
+}
+
+function exportMPP(){
+  if(!planData){alert('Generá un planning primero.');return;}
+  const p=planData;
+  let xml=`<?xml version="1.0" encoding="UTF-8"?>\n<Project xmlns="http://schemas.microsoft.com/project">\n  <Name>${p.nom}</Name>\n  <Company>${p.cli}</Company>\n  <Manager>${p.cons}</Manager>\n  <StartDate>${p.fechaInicio.toISOString()}</StartDate>\n  <Tasks>`;
+  p.tareas.forEach(t=>{
+    xml+=`\n    <Task>\n      <UID>${t.id}</UID>\n      <ID>${t.id}</ID>\n      <Name>${t.tarea}</Name>\n      <Duration>PT${t.dias*8}H0M0S</Duration>\n      <Start>${t.inicio.toISOString()}</Start>\n      <Finish>${t.fin.toISOString()}</Finish>\n      <Notes>Fase: ${t.fase} | Responsable: ${t.responsable}</Notes>\n    </Task>`;
+  });
+  xml+=`\n  </Tasks>\n</Project>`;
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([xml],{type:'application/xml'}));
+  a.download=`Planning_${p.nom.replace(/\s/g,'_')}.xml`;a.click();
+}
+
+function exportRiesgos(){
+  if(!rAuto.length&&!rManuales.length){alert('No hay riesgos para exportar.');return;}
+  const wb=XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet([
+    ['Tipo','Descripción','Impacto','Mitigación'],
+    ...rAuto.concat(rManuales).map(r=>[r.tipo,r.txt,r.impacto,r.mit])
+  ]),'Riesgos');
+  XLSX.writeFile(wb,`Riesgos_${planData?planData.nom:'proyecto'}.xlsx`);
+}
+
+renderEstTable();
+document.getElementById('p-fecha').valueAsDate=new Date();
+</script>
+</body>
+</html>
