@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "lastSaved": "2026-06-17T19:38:51.846Z",
+  "lastSaved": "2026-06-17T19:49:47.881Z",
   "historial": [
     {
       "nombre": "Grupo Latam (214182520016, 210327260017, 216865230012, 215976360013) - Recepción - xDoc",
@@ -117,6 +117,36 @@
         "golive": 1,
         "hypercare": 0
       }
+    },
+    {
+      "nombre": "CARGILL URUGUAY SA (215028510012) - API - Recepción",
+      "producto": "API Recepción",
+      "pais": "Uruguay",
+      "fechaInicio": "2026-05-05",
+      "fechaFinPlan": "2026-07-08",
+      "fechaFinReal": "",
+      "diasPlan": 45,
+      "diasReal": 45,
+      "feriadosPeriodo": [
+        {
+          "fecha": "2026-05-18",
+          "nombre": "Batalla de Las Piedras"
+        },
+        {
+          "fecha": "2026-06-19",
+          "nombre": "Natalicio de Artigas"
+        }
+      ],
+      "faseDias": {
+        "inicio": 4,
+        "integracion": 6,
+        "implementacion": 12,
+        "sit": 6,
+        "uat": 6,
+        "cutover": 2,
+        "golive": 1,
+        "hypercare": 9
+      }
     }
   ],
   "estimaciones": {
@@ -151,14 +181,14 @@
       "hypercare": 7
     },
     "API Recepción": {
-      "inicio": 2,
-      "integracion": 8,
+      "inicio": 4,
+      "integracion": 6,
       "implementacion": 12,
       "sit": 6,
-      "uat": 5,
+      "uat": 6,
       "cutover": 2,
       "golive": 1,
-      "hypercare": 7
+      "hypercare": 9
     },
     "xPos": {
       "inicio": 3,
@@ -207,7 +237,7 @@
     "xDoc Global": "historial (1 proy.)",
     "ioFacturo": "default",
     "API Emisión": "default",
-    "API Recepción": "default",
+    "API Recepción": "historial (1 proy.)",
     "xPos": "default",
     "SSO": "default",
     "Smart Supply": "historial (1 proy.)"
