@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "lastSaved": "2026-06-17T20:40:54.330Z",
+  "lastSaved": "2026-06-17T20:47:14.741Z",
   "historial": [
     {
       "nombre": "Grupo Latam (214182520016, 210327260017, 216865230012, 215976360013) - RecepciÃ³n - xDoc",
@@ -253,6 +253,17 @@
         "Bolivia"
       ],
       "email": "ana.machado@gosocket.net"
+    },
+    {
+      "id": 2,
+      "nombre": "Lucas Moreira",
+      "rol": "Consultor",
+      "paises": [
+        "Paraguay",
+        "Uruguay",
+        "Bolivia"
+      ],
+      "email": "lucas.moreira@gosocket.net"
     }
   ]
 }
