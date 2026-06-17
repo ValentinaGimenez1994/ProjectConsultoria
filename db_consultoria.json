@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "lastSaved": "2026-06-17T20:47:14.741Z",
+  "lastSaved": "2026-06-17T20:59:03.346Z",
   "historial": [
     {
       "nombre": "Grupo Latam (214182520016, 210327260017, 216865230012, 215976360013) - RecepciÃ³n - xDoc",
@@ -264,6 +264,17 @@
         "Bolivia"
       ],
       "email": "lucas.moreira@gosocket.net"
+    },
+    {
+      "id": 3,
+      "nombre": "Valentina Gimenez",
+      "rol": "PMO",
+      "paises": [
+        "Paraguay",
+        "Uruguay",
+        "Bolivia"
+      ],
+      "email": "valentina.gimenez@gosocket.net"
     }
   ]
 }
