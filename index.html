@@ -1,0 +1,1487 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Project Consultoría — Generador de Plannings</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#f4f6f8;color:#1a2e2e;min-height:100vh}
+.topbar{background:#1a2e2e;padding:14px 32px;display:flex;align-items:center;gap:12px}
+.topbar-title{color:#fff;font-size:17px;font-weight:600}
+.topbar-sub{color:#02c39a;font-size:12px;font-weight:500;letter-spacing:.05em;text-transform:uppercase}
+.container{max-width:1150px;margin:0 auto;padding:24px 20px}
+.tabs{display:flex;gap:2px;background:#e8ecee;border-radius:10px;padding:4px;margin-bottom:24px;flex-wrap:wrap}
+.tab{flex:1;padding:8px 10px;font-size:13px;cursor:pointer;border:none;background:none;color:#6e7c7c;border-radius:7px;font-weight:500;transition:all .15s;white-space:nowrap}
+.tab.active{background:#fff;color:#028090;box-shadow:0 1px 4px rgba(0,0,0,.1)}
+.tab i{margin-right:4px}
+.section{display:none}.section.active{display:block}
+.card{background:#fff;border:1px solid #e2e8ea;border-radius:12px;padding:20px 22px;margin-bottom:16px}
+.card-title{font-size:11px;font-weight:600;color:#028090;text-transform:uppercase;letter-spacing:.08em;margin-bottom:14px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.field{display:flex;flex-direction:column;gap:5px}
+.field label{font-size:12px;color:#6e7c7c;font-weight:500}
+.field input,.field select{width:100%;padding:8px 11px;font-size:13px;border:1px solid #d0d8dc;border-radius:8px;background:#fff;color:#1a2e2e;transition:border .15s}
+.field input:focus,.field select:focus{outline:none;border-color:#028090;box-shadow:0 0 0 3px rgba(2,128,144,.1)}
+.btn{padding:9px 18px;border-radius:8px;font-size:13px;cursor:pointer;border:1px solid #d0d8dc;background:#fff;color:#1a2e2e;font-weight:500;transition:all .15s;display:inline-flex;align-items:center;gap:6px}
+.btn:hover{background:#f4f6f8}
+.btn-primary{background:#028090;color:#fff;border-color:#028090}
+.btn-primary:hover{background:#026a78}
+.btn-sm{padding:6px 12px;font-size:12px}
+.btn-danger{border-color:#f09595;color:#a32d2d}
+.btn-danger:hover{background:#fcebeb}
+.btn-row{display:flex;gap:8px;justify-content:flex-end;margin-top:16px;flex-wrap:wrap}
+.badge{display:inline-block;padding:2px 9px;border-radius:99px;font-size:11px;font-weight:600}
+.badge-red{background:#fcebeb;color:#a32d2d}
+.badge-amber{background:#faeeda;color:#854f0b}
+.badge-green{background:#eaf3de;color:#3b6d11}
+.badge-blue{background:#e6f1fb;color:#185fa5}
+.badge-gray{background:#f1efe8;color:#5f5e5a}
+.badge-teal{background:#e1f5ee;color:#0f6e56}
+.badge-purple{background:#eeedfe;color:#534ab7}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{text-align:left;padding:10px 12px;background:#f4f6f8;color:#6e7c7c;font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.05em;border-bottom:1px solid #e2e8ea}
+td{padding:9px 12px;border-bottom:1px solid #f0f3f4;color:#1a2e2e;vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#fafcfc}
+.stat{background:#f4f6f8;border-radius:10px;padding:16px;text-align:center}
+.stat-val{font-size:26px;font-weight:700;color:#028090}
+.stat-lbl{font-size:11px;color:#6e7c7c;margin-top:4px;font-weight:500}
+.gantt-wrap{overflow-x:auto;padding-bottom:4px}
+.risk-item{padding:12px 0;border-bottom:1px solid #f0f3f4;display:flex;gap:12px;align-items:flex-start}
+.risk-item:last-child{border-bottom:none}
+.msg{padding:10px 14px;border-radius:8px;font-size:13px;margin-top:10px}
+.msg-success{background:#eaf3de;color:#3b6d11}
+.msg-error{background:#fcebeb;color:#a32d2d}
+.empty-state{text-align:center;padding:50px 20px;color:#6e7c7c}
+.empty-state i{font-size:44px;display:block;margin-bottom:14px;color:#d0d8dc}
+.empty-state p{font-size:14px}
+input[type=number]{-moz-appearance:textfield}
+.est-input{width:54px!important;padding:4px 6px!important;font-size:12px!important;text-align:center}
+.drop-zone{border:2px dashed #d0d8dc;border-radius:12px;padding:40px;text-align:center;cursor:pointer;transition:all .2s;background:#fafcfc}
+.drop-zone:hover,.drop-zone.drag-over{border-color:#028090;background:#f0fafa}
+.drop-zone i{font-size:36px;color:#b0bcc0;display:block;margin-bottom:12px}
+.drop-zone p{font-size:14px;color:#6e7c7c;margin-bottom:6px}
+.drop-zone span{font-size:12px;color:#b0bcc0}
+.pending-item{background:#f4f6f8;border-radius:8px;padding:12px 14px;margin-bottom:8px;display:flex;align-items:center;gap:12px}
+.pending-item .fi{flex:1}
+.pending-badge{background:#faeeda;color:#854f0b;font-size:11px;font-weight:600;padding:2px 8px;border-radius:99px}
+.hist-row-ok td:first-child{border-left:3px solid #3b6d11}
+.progress-bar-wrap{background:#e8ecee;border-radius:99px;height:8px;margin:4px 0}
+.progress-bar{background:#028090;border-radius:99px;height:8px;transition:width .3s}
+@media(max-width:700px){.grid2,.grid3,.grid4{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div>
+    <div class="topbar-sub">Herramienta interna</div>
+    <div class="topbar-title"><i class="ti ti-calendar-stats"></i> Project Consultoría — Generador de Plannings</div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('nuevo')"><i class="ti ti-plus"></i> Nuevo proyecto</button>
+    <button class="tab" onclick="switchTab('historial')"><i class="ti ti-upload"></i> Importar historial <span id="hist-badge"></span></button>
+    <button class="tab" onclick="switchTab('estimaciones')"><i class="ti ti-settings"></i> Estimaciones base</button>
+    <button class="tab" onclick="switchTab('planning')"><i class="ti ti-calendar"></i> Planning generado</button>
+    <button class="tab" onclick="switchTab('riesgos')"><i class="ti ti-alert-triangle"></i> Riesgos <span id="risk-badge"></span></button>
+    <button class="tab" onclick="switchTab('config')"><i class="ti ti-database"></i> Base de datos <span id="sync-badge"></span></button>
+  </div>
+
+  <!-- NUEVO PROYECTO -->
+  <div id="tab-nuevo" class="section active">
+    <div class="card">
+      <div class="card-title">Datos del proyecto</div>
+      <div class="grid2" style="margin-bottom:14px">
+        <div class="field"><label>Nombre del proyecto *</label><input id="p-nombre" type="text" placeholder="Ej: Implementación xDoc Global — ACME Corp"></div>
+        <div class="field"><label>Cliente *</label><input id="p-cliente" type="text" placeholder="Ej: ACME Corp S.A."></div>
+      </div>
+      <div class="grid3" style="margin-bottom:14px">
+        <div class="field"><label>País *</label>
+          <select id="p-pais"><option value="">Seleccionar...</option><option>Paraguay</option><option>Uruguay</option><option>Argentina</option><option>Chile</option><option>Brasil</option><option>Colombia</option><option>México</option><option>Perú</option><option>Bolivia</option><option>Otro</option></select>
+        </div>
+        <div class="field"><label>Producto *</label>
+          <select id="p-producto"><option value="">Seleccionar...</option><option>xDoc Global</option><option>ioFacturo</option><option>API Emisión</option><option>API Recepción</option><option>xPos</option><option>SSO</option><option>Smart Supply</option></select>
+        </div>
+        <div class="field"><label>Consultor a cargo *</label><input id="p-consultor" type="text" placeholder="Nombre del consultor"></div>
+      </div>
+      <div class="grid3">
+        <div class="field"><label>Fecha de inicio *</label><input id="p-fecha" type="date"></div>
+        <div class="field"><label>PMO (opcional)</label><input id="p-pmo" type="text" placeholder="Nombre del PMO"></div>
+        <div class="field"><label>Account Manager (opcional)</label><input id="p-am" type="text" placeholder="Nombre del AM"></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Ajustes del planning</div>
+      <div class="grid3">
+        <div class="field"><label>Complejidad estimada</label>
+          <select id="p-complejidad"><option value="1">Normal (×1.0)</option><option value="1.3">Alta (×1.3)</option><option value="1.6">Muy alta (×1.6)</option></select>
+        </div>
+        <div class="field"><label>¿Incluye integración técnica?</label>
+          <select id="p-integracion"><option value="1">Sí</option><option value="0">No</option></select>
+        </div>
+        <div class="field"><label>Notas adicionales</label><input id="p-notas" type="text" placeholder="Observaciones para el planning"></div>
+      </div>
+    </div>
+    <div id="hist-info-box" style="display:none" class="card" style="border-left:3px solid #028090">
+      <div class="card-title">Base de estimación activa</div>
+      <div id="hist-info-content"></div>
+    </div>
+    <div class="btn-row">
+      <button class="btn" onclick="resetForm()"><i class="ti ti-refresh"></i> Limpiar</button>
+      <button class="btn btn-primary" onclick="generarPlanning()"><i class="ti ti-player-play"></i> Generar planning</button>
+    </div>
+    <div id="msg-nuevo" class="msg" style="display:none"></div>
+  </div>
+
+  <!-- HISTORIAL / IMPORTAR -->
+  <div id="tab-historial" class="section">
+    <div class="card">
+      <div class="card-title">Importar proyectos históricos (.xml exportado de MS Project)</div>
+      <div class="drop-zone" id="drop-zone" onclick="document.getElementById('file-input').click()" ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="dropFiles(event)">
+        <i class="ti ti-file-upload"></i>
+        <p>Arrastrá uno o varios archivos XML acá, o hacé clic para seleccionar</p>
+        <span>Exportá desde MS Project: Archivo → Guardar como → XML de Project (*.xml)</span>
+      </div>
+      <input type="file" id="file-input" accept=".xml" multiple style="display:none" onchange="handleFiles(this.files)">
+      <div id="pending-list" style="margin-top:14px;display:none">
+        <div style="font-size:12px;font-weight:600;color:#6e7c7c;text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px">Archivos pendientes de confirmación</div>
+        <div id="pending-items"></div>
+        <div class="btn-row" style="margin-top:12px">
+          <button class="btn btn-sm" onclick="clearPending()"><i class="ti ti-x"></i> Cancelar</button>
+          <button class="btn btn-sm btn-primary" onclick="procesarTodos()"><i class="ti ti-check"></i> Procesar todos y actualizar estimaciones</button>
+        </div>
+      </div>
+      <div id="progress-wrap" style="display:none;margin-top:14px">
+        <div style="font-size:13px;color:#6e7c7c;margin-bottom:6px" id="progress-label">Procesando...</div>
+        <div class="progress-bar-wrap"><div class="progress-bar" id="progress-bar" style="width:0%"></div></div>
+      </div>
+      <div id="msg-hist" class="msg" style="display:none"></div>
+    </div>
+
+    <div id="hist-resumen" style="display:none">
+      <div class="grid4" id="hist-stats" style="margin-bottom:16px"></div>
+      <div class="card">
+        <div class="card-title">Proyectos importados — historial</div>
+        <div style="overflow-x:auto">
+          <table>
+            <thead><tr>
+              <th>Proyecto</th><th>Producto</th><th>País</th>
+              <th>Inicio</th><th>Fin</th><th>Fin real</th>
+              <th>Días plan.</th><th>Días real</th><th>Desvío</th><th>Feriados UY</th>
+            </tr></thead>
+            <tbody id="hist-tbody"></tbody>
+          </table>
+        </div>
+        <div class="btn-row" style="margin-top:12px">
+          <button class="btn btn-sm btn-danger" onclick="limpiarHistorial()"><i class="ti ti-trash"></i> Limpiar historial</button>
+          <button class="btn btn-sm" onclick="exportHistExcel()"><i class="ti ti-file-spreadsheet"></i> Exportar historial Excel</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Promedios por producto — calculados del historial real</div>
+        <div style="overflow-x:auto"><table id="avg-table">
+          <thead><tr><th>Producto</th><th>País</th><th>Proyectos</th><th>Días prom. real</th><th>vs. estimación base</th></tr></thead>
+          <tbody id="avg-tbody"></tbody>
+        </table></div>
+        <p style="font-size:11px;color:#6e7c7c;margin-top:10px"><i class="ti ti-info-circle"></i> Las estimaciones base se actualizan automáticamente con estos promedios al procesar los archivos.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ESTIMACIONES -->
+  <div id="tab-estimaciones" class="section">
+    <div class="card">
+      <div class="card-title">Estimaciones base por producto (días hábiles por fase)</div>
+      <p style="font-size:12px;color:#6e7c7c;margin-bottom:14px">Estas estimaciones se actualizan automáticamente al importar proyectos históricos. También podés editarlas manualmente.</p>
+      <div style="overflow-x:auto">
+        <table><thead><tr>
+          <th style="min-width:130px">Producto</th>
+          <th>Inicio</th><th>Integración</th><th>Implementación</th>
+          <th>SIT</th><th>UAT</th><th>Cutover</th><th>Go Live</th><th>Hypercare</th>
+          <th>Total</th><th>Fuente</th>
+        </tr></thead><tbody id="est-body"></tbody></table>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-sm" onclick="resetEst()"><i class="ti ti-refresh"></i> Restaurar defaults</button>
+        <button class="btn btn-sm btn-primary" onclick="showMsg('msg-est','Estimaciones guardadas para esta sesión.','success')"><i class="ti ti-device-floppy"></i> Guardar</button>
+      </div>
+      <div id="msg-est" class="msg" style="display:none"></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Multiplicadores por país</div>
+      <div id="pais-grid" class="grid4"></div>
+      <p style="font-size:11px;color:#6e7c7c;margin-top:10px">1.0 = sin ajuste. Se actualizan automáticamente con el historial importado.</p>
+    </div>
+  </div>
+
+  <!-- PLANNING -->
+  <div id="tab-planning" class="section">
+    <div id="planning-placeholder" class="empty-state">
+      <i class="ti ti-calendar"></i>
+      <p>Completá los datos del proyecto y presioná <strong>Generar planning</strong></p>
+    </div>
+    <div id="planning-content" style="display:none">
+      <div class="grid4" id="plan-stats" style="margin-bottom:16px"></div>
+      <div class="card"><div class="card-title">Información del proyecto</div><div id="plan-info" class="grid3"></div></div>
+      <div id="plan-feriados"></div>
+      <div class="card">
+        <div class="card-title">Gantt — vista por fases</div>
+        <div class="gantt-wrap"><table id="gantt-table" style="min-width:680px">
+          <thead><tr><th style="width:130px">Fase</th><th style="width:90px">Inicio</th><th style="width:90px">Fin</th><th style="width:60px">Días</th><th>Línea de tiempo</th></tr></thead>
+          <tbody id="gantt-body"></tbody>
+        </table></div>
+      </div>
+      <div class="card">
+        <div class="card-title">Tareas detalladas</div>
+        <div style="overflow-x:auto"><table>
+          <thead><tr><th style="width:36px">#</th><th>Tarea</th><th style="width:120px">Fase</th><th style="width:160px">Responsable</th><th style="width:50px">Días</th><th style="width:90px">Inicio</th><th style="width:90px">Fin</th></tr></thead>
+          <tbody id="tasks-body"></tbody>
+        </table></div>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-sm" onclick="exportExcel()"><i class="ti ti-file-spreadsheet"></i> Exportar Excel</button>
+        <button class="btn btn-sm" onclick="exportMPP()"><i class="ti ti-download"></i> Exportar XML (MS Project)</button>
+        <button class="btn btn-sm btn-primary" onclick="window.print()"><i class="ti ti-printer"></i> Imprimir / PDF</button>
+      </div>
+      <p style="font-size:11px;color:#6e7c7c;text-align:right;margin-top:6px">El XML es compatible con MS Project: Archivo → Abrir → seleccioná el .xml</p>
+    </div>
+  </div>
+
+  <!-- RIESGOS -->
+  <div id="tab-riesgos" class="section">
+    <div id="riesgos-placeholder" class="empty-state">
+      <i class="ti ti-shield"></i>
+      <p>Generá un planning para ver los riesgos detectados automáticamente</p>
+    </div>
+    <div id="riesgos-content" style="display:none">
+      <div class="card">
+        <div class="card-title">Riesgos detectados automáticamente</div>
+        <div id="riesgos-lista"></div>
+      </div>
+      <div class="card">
+        <div class="card-title">Agregar riesgo manual</div>
+        <div class="grid2" style="margin-bottom:12px">
+          <div class="field"><label>Descripción del riesgo</label><input id="r-desc" type="text" placeholder="Ej: Dependencia de área de TI del cliente"></div>
+          <div class="field"><label>Impacto</label><select id="r-impacto"><option>Alto</option><option>Medio</option><option>Bajo</option></select></div>
+        </div>
+        <div class="field" style="margin-bottom:12px"><label>Mitigación sugerida</label><input id="r-mit" type="text" placeholder="Ej: Agendar reunión técnica en semana 1"></div>
+        <button class="btn btn-sm btn-primary" onclick="agregarRM()"><i class="ti ti-plus"></i> Agregar riesgo</button>
+      </div>
+      <div id="riesgos-manuales-card" class="card" style="display:none">
+        <div class="card-title">Riesgos manuales</div>
+        <div id="riesgos-manuales"></div>
+      </div>
+      <div class="btn-row"><button class="btn btn-sm" onclick="exportRiesgos()"><i class="ti ti-file-spreadsheet"></i> Exportar riesgos</button></div>
+    </div>
+  </div>
+
+  <!-- CONFIGURACIÓN / BASE DE DATOS -->
+  <div id="tab-config" class="section">
+    <div class="card" style="border-left:3px solid #028090">
+      <div class="card-title">Estado de sincronización</div>
+      <div id="sync-status" style="font-size:13px;color:#6e7c7c;margin-bottom:16px">Verificando...</div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <button class="btn btn-sm btn-primary" onclick="syncToGitHub()"><i class="ti ti-cloud-upload"></i> Guardar en GitHub ahora</button>
+        <button class="btn btn-sm" onclick="loadFromGitHub()"><i class="ti ti-cloud-download"></i> Cargar desde GitHub</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Configuración de GitHub</div>
+      <p style="font-size:12px;color:#6e7c7c;margin-bottom:14px">La herramienta guarda el historial y estimaciones en un archivo JSON en tu repositorio de GitHub. Funciona desde cualquier dispositivo con la misma cuenta.</p>
+      <div class="grid2" style="margin-bottom:12px">
+        <div class="field"><label>Usuario de GitHub</label><input id="cfg-user" type="text" placeholder="Ej: ValentinaGimenez1994"></div>
+        <div class="field"><label>Nombre del repositorio</label><input id="cfg-repo" type="text" placeholder="Ej: ProjectConsultoria"></div>
+      </div>
+      <div class="field" style="margin-bottom:12px">
+        <label>Personal Access Token <span style="color:#a32d2d">*</span></label>
+        <input id="cfg-token" type="password" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx">
+        <span style="font-size:11px;color:#6e7c7c;margin-top:3px"><i class="ti ti-lock" style="font-size:11px"></i> Tu token solo se usa para comunicarse con GitHub desde tu navegador. No se envía a ningún otro servidor.</span>
+      </div>
+      <div class="field" style="margin-bottom:14px">
+        <label>Archivo de datos</label>
+        <input id="cfg-file" type="text" value="db_consultoria.json">
+      </div>
+      <div class="btn-row" style="margin-top:0">
+        <button class="btn btn-sm" onclick="testGitHubConnection()"><i class="ti ti-plug"></i> Probar conexión</button>
+        <button class="btn btn-sm btn-primary" onclick="saveConfig()"><i class="ti ti-device-floppy"></i> Guardar configuración</button>
+      </div>
+      <div id="msg-config" class="msg" style="display:none"></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Almacenamiento local (este navegador)</div>
+      <div id="local-stats" style="font-size:13px;color:#6e7c7c;margin-bottom:14px">Cargando...</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn btn-sm" onclick="exportLocalBackup()"><i class="ti ti-download"></i> Descargar backup JSON</button>
+        <button class="btn btn-sm" onclick="document.getElementById('backup-input').click()"><i class="ti ti-upload"></i> Restaurar desde backup</button>
+        <input type="file" id="backup-input" accept=".json" style="display:none" onchange="doImportBackup(this)">
+        <button class="btn btn-sm btn-danger" onclick="clearLocalStorage()"><i class="ti ti-trash"></i> Borrar datos locales</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const FASES=['Inicio','Integración','Implementación','SIT','UAT','Cutover','Go Live','Hypercare'];
+const KEYS=['inicio','integracion','implementacion','sit','uat','cutover','golive','hypercare'];
+const COLORES=['#028090','#00A896','#02C39A','#185FA5','#3B6D11','#854F0B','#A32D2D','#1A2E2E'];
+const PRODUCTOS=['xDoc Global','ioFacturo','API Emisión','API Recepción','xPos','SSO','Smart Supply'];
+const PAISES=['Paraguay','Uruguay','Argentina','Chile','Brasil','Colombia','México','Perú','Bolivia','Otro'];
+const FASE_BADGE={'Inicio':'badge-blue','Integración':'badge-gray','Implementación':'badge-blue','SIT':'badge-amber','UAT':'badge-amber','Cutover':'badge-red','Go Live':'badge-green','Hypercare':'badge-teal'};
+
+const DEF_EST={
+  'xDoc Global':   {inicio:3,integracion:5,implementacion:10,sit:5,uat:5,cutover:2,golive:1,hypercare:7},
+  'ioFacturo':     {inicio:3,integracion:7,implementacion:14,sit:7,uat:7,cutover:3,golive:1,hypercare:10},
+  'API Emisión':   {inicio:2,integracion:8,implementacion:12,sit:6,uat:5,cutover:2,golive:1,hypercare:7},
+  'API Recepción': {inicio:2,integracion:8,implementacion:12,sit:6,uat:5,cutover:2,golive:1,hypercare:7},
+  'xPos':          {inicio:3,integracion:4,implementacion:8,sit:4,uat:4,cutover:2,golive:1,hypercare:5},
+  'SSO':           {inicio:2,integracion:3,implementacion:6,sit:3,uat:3,cutover:1,golive:1,hypercare:5},
+  'Smart Supply':  {inicio:4,integracion:8,implementacion:15,sit:7,uat:7,cutover:3,golive:1,hypercare:10},
+};
+const DEF_PAISES={Paraguay:1.0,Uruguay:1.0,Argentina:1.1,Chile:1.0,Brasil:1.3,Colombia:1.1,México:1.2,Perú:1.1,Bolivia:1.15,Otro:1.1};
+
+const RIESGOS_PROD={
+  'xDoc Global':['Dependencia de actualización de versión del proveedor de facturación','Configuración de certificados digitales puede requerir intervención del área legal'],
+  'ioFacturo':['Integración con SAP puede generar retrasos por disponibilidad del equipo técnico','Cambios normativos del SET pueden impactar el scope durante la implementación'],
+  'API Emisión':['Disponibilidad de ambientes de testing del cliente puede no estar garantizada','Cambios en la API del cliente pueden requerir refactorización'],
+  'API Recepción':['Validación de formato de comprobantes puede variar por rubro del cliente','Coordinación con proveedor de ERP puede extender los plazos'],
+  'xPos':['Disponibilidad de dispositivos físicos para pruebas puede ser limitada','Capacitación de usuarios finales requiere coordinar múltiples locales'],
+  'SSO':['Integración con Active Directory del cliente puede generar demoras','Políticas de seguridad del cliente pueden restringir la configuración'],
+  'Smart Supply':['Mapeo de cadena de suministro puede ser más complejo de lo estimado','Validación con múltiples proveedores extiende los plazos de SIT/UAT'],
+};
+const RIESGOS_PAIS={Brasil:['Complejidad regulatoria fiscal elevada: puede requerir consulta legal adicional'],México:['Normativa del SAT en constante cambio: monitorear actualizaciones'],Argentina:['Entorno económico variable: prever impacto en tiempos de aprobación internos']};
+const TAREAS={
+  'Inicio':[{t:'Kickoff del proyecto',r:'Consultor + Cliente'},{t:'Relevamiento de requerimientos funcionales',r:'Consultor'},{t:'Definición del plan de comunicación',r:'PMO'}],
+  'Integración':[{t:'Configuración de ambiente de desarrollo',r:'Consultor'},{t:'Desarrollo de integración técnica',r:'Consultor + TI Cliente'},{t:'Revisión de conectividad y endpoints',r:'Consultor'}],
+  'Implementación':[{t:'Configuración del producto en ambiente QA',r:'Consultor'},{t:'Carga y validación de datos maestros',r:'Consultor + Cliente'},{t:'Configuración de flujos y reglas de negocio',r:'Consultor'},{t:'Documentación técnica y funcional',r:'Consultor'}],
+  'SIT':[{t:'Ejecución de casos de prueba SIT',r:'Consultor'},{t:'Registro y resolución de incidencias SIT',r:'Consultor'}],
+  'UAT':[{t:'Capacitación a usuarios clave',r:'Consultor'},{t:'Ejecución de pruebas de aceptación UAT',r:'Cliente'},{t:'Firma de aceptación UAT',r:'PMO + Cliente'}],
+  'Cutover':[{t:'Plan de pase a producción',r:'Consultor + PMO'},{t:'Migración y configuración en PRD',r:'Consultor'}],
+  'Go Live':[{t:'Activación en producción',r:'Consultor'},{t:'Monitoreo de primeras operaciones',r:'Consultor + Cliente'}],
+  'Hypercare':[{t:'Soporte post go-live',r:'Consultor'},{t:'Revisión de incidencias y ajustes',r:'Consultor'},{t:'Cierre formal del proyecto',r:'PMO + Cliente'}],
+};
+
+let est=JSON.parse(JSON.stringify(DEF_EST));
+let multPaises=JSON.parse(JSON.stringify(DEF_PAISES));
+let planData=null,rAuto=[],rManuales=[];
+let historial=[]; // proyectos importados
+let pendingFiles=[]; // archivos pendientes de confirmación
+let estFuente={}; // 'default' o 'historial' por producto
+
+PRODUCTOS.forEach(p=>estFuente[p]='default');
+
+// ─── MOTOR DE FERIADOS ───────────────────────────────────────────────────────
+// Uruguay usa feriados propios. Paraguay, Bolivia y Uruguay → misma lista UY.
+// Resto de países → sin feriados por ahora.
+
+function easterDate(year){
+  // Algoritmo de Meeus/Jones/Butcher para calcular Pascua
+  const a=year%19,b=Math.floor(year/100),c=year%100;
+  const d=Math.floor(b/4),e=b%4,f=Math.floor((b+8)/25);
+  const g=Math.floor((b-f+1)/3),h=(19*a+b-d-g+15)%30;
+  const i=Math.floor(c/4),k=c%4,l=(32+2*e+2*i-h-k)%7;
+  const m=Math.floor((a+11*h+22*l)/451);
+  const month=Math.floor((h+l-7*m+114)/31);
+  const day=((h+l-7*m+114)%31)+1;
+  return new Date(year,month-1,day);
+}
+
+function getUYHolidays(year){
+  const easter=easterDate(year);
+  const addDays=(d,n)=>{const r=new Date(d);r.setDate(r.getDate()+n);return r;};
+  const fmtD=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+
+  // Feriados fijos Uruguay (laborales y no laborales)
+  const fijos=[
+    {f:`${year}-01-01`,n:'Año Nuevo'},
+    {f:`${year}-01-06`,n:'Reyes Magos (laborable)'},
+    {f:`${year}-04-19`,n:'Desembarco de los 33 Orientales'},
+    {f:`${year}-05-01`,n:'Día del Trabajo'},
+    {f:`${year}-05-18`,n:'Batalla de Las Piedras'},
+    {f:`${year}-06-19`,n:'Natalicio de Artigas'},
+    {f:`${year}-07-18`,n:'Jura de la Constitución'},
+    {f:`${year}-08-25`,n:'Declaratoria de la Independencia'},
+    {f:`${year}-10-12`,n:'Día de la Raza (laborable)'},
+    {f:`${year}-11-02`,n:'Día de los Difuntos (laborable)'},
+    {f:`${year}-12-08`,n:'Día de la Familia (laborable)'},
+    {f:`${year}-12-25`,n:'Navidad'},
+  ];
+
+  // Feriados móviles basados en Pascua
+  const moviles=[
+    {d:addDays(easter,-48),n:'Carnaval lunes'},
+    {d:addDays(easter,-47),n:'Carnaval martes'},
+    {d:addDays(easter,-3), n:'Jueves Santo (Semana de Turismo)'},
+    {d:addDays(easter,-2), n:'Viernes Santo (Semana de Turismo)'},
+    {d:addDays(easter,-1), n:'Sábado Santo'},
+    {d:easter,             n:'Pascua'},
+  ];
+
+  const set=new Set();
+  fijos.forEach(f=>set.add(f.f));
+  moviles.forEach(m=>set.add(fmtD(m.d)));
+  return set;
+}
+
+// Cache de feriados por año
+const holidayCache={};
+function getHolidaySet(pais,year){
+  const usaUY=['Uruguay','Paraguay','Bolivia'];
+  if(!usaUY.includes(pais))return new Set();
+  const key=`UY-${year}`;
+  if(!holidayCache[key])holidayCache[key]=getUYHolidays(year);
+  return holidayCache[key];
+}
+
+function isFeriado(date,pais){
+  const y=date.getFullYear();
+  const set=getHolidaySet(pais,y);
+  const key=`${y}-${String(date.getMonth()+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}`;
+  return set.has(key);
+}
+
+function isWorkday(date,pais){
+  const dow=date.getDay();
+  if(dow===0||dow===6)return false;
+  if(isFeriado(date,pais))return false;
+  return true;
+}
+
+// ─── UTILS ───────────────────────────────────────────────────────────────────
+function switchTab(t){
+  const names=['nuevo','historial','estimaciones','planning','riesgos'];
+  document.querySelectorAll('.tab').forEach((b,i)=>b.classList.toggle('active',names[i]===t));
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.getElementById('tab-'+t).classList.add('active');
+}
+function showMsg(id,txt,type='success'){
+  const el=document.getElementById(id);
+  el.className='msg msg-'+(type==='success'?'success':'error');
+  el.textContent=txt;el.style.display=txt?'block':'none';
+}
+function fmt(d){if(!d)return'—';return new Date(d).toISOString().split('T')[0];}
+
+// addWD y countWD ahora reciben pais y saltean feriados
+let _currentPais='Otro'; // se actualiza al generar planning
+function addWD(date,days,pais){
+  pais=pais||_currentPais||'Otro';
+  if(days<=0)return new Date(date);
+  let d=new Date(date),added=0;
+  while(added<days){
+    d.setDate(d.getDate()+1);
+    if(isWorkday(d,pais))added++;
+  }
+  return d;
+}
+function countWD(d1,d2,pais){
+  pais=pais||_currentPais||'Otro';
+  let s=new Date(d1),e=new Date(d2),n=0;
+  while(s<=e){if(isWorkday(s,pais))n++;s.setDate(s.getDate()+1);}
+  return n;
+}
+function feriadosEnRango(d1,d2,pais){
+  // Devuelve lista de feriados que caen en días hábiles (lunes-viernes) en el rango
+  const usaUY=['Uruguay','Paraguay','Bolivia'];
+  if(!usaUY.includes(pais))return[];
+  const result=[];
+  let s=new Date(d1),e=new Date(d2);
+  const yearsVisto=new Set();
+  while(s<=e){
+    const y=s.getFullYear();
+    if(!yearsVisto.has(y)){yearsVisto.add(y);getHolidaySet(pais,y);}
+    const dow=s.getDay();
+    if(dow!==0&&dow!==6&&isFeriado(s,pais)){
+      result.push({fecha:fmt(s),nombre:getNombreFeriado(s,pais)});
+    }
+    s.setDate(s.getDate()+1);
+  }
+  return result;
+}
+function getNombreFeriado(date,pais){
+  // Retorna nombre del feriado (simplificado)
+  const m=date.getMonth()+1,d=date.getDate();
+  const nombres={
+    '1-1':'Año Nuevo','1-6':'Reyes Magos','4-19':'Desembarco 33 Orientales',
+    '5-1':'Día del Trabajo','5-18':'Batalla de Las Piedras','6-19':'Natalicio de Artigas',
+    '7-18':'Jura de la Constitución','8-25':'Independencia','10-12':'Día de la Raza',
+    '11-2':'Día de los Difuntos','12-8':'Día de la Familia','12-25':'Navidad',
+  };
+  return nombres[`${m}-${d}`]||'Feriado';
+}
+function detectProducto(name){
+  const n=name.toLowerCase();
+  for(const p of PRODUCTOS){if(n.includes(p.toLowerCase()))return p;}
+  if(n.includes('xdoc'))return'xDoc Global';
+  if(n.includes('iofact')||n.includes('factur'))return'ioFacturo';
+  if(n.includes('emis'))return'API Emisión';
+  if(n.includes('recep'))return'API Recepción';
+  if(n.includes('xpos')||n.includes('pos'))return'xPos';
+  if(n.includes('sso')||n.includes('single'))return'SSO';
+  if(n.includes('supply')||n.includes('smart'))return'Smart Supply';
+  return null;
+}
+function detectPais(name){
+  const n=name.toLowerCase();
+  for(const p of PAISES){if(n.includes(p.toLowerCase()))return p;}
+  if(n.includes('py')||n.includes('pry'))return'Paraguay';
+  if(n.includes('uy')||n.includes('uru'))return'Uruguay';
+  if(n.includes('ar')||n.includes('arg'))return'Argentina';
+  if(n.includes('cl')||n.includes('chi'))return'Chile';
+  if(n.includes('br')||n.includes('bra'))return'Brasil';
+  if(n.includes('co')||n.includes('col'))return'Colombia';
+  if(n.includes('mx')||n.includes('mex'))return'México';
+  if(n.includes('pe')||n.includes('per'))return'Perú';
+  if(n.includes('bo')||n.includes('bol'))return'Bolivia';
+  return null;
+}
+
+// ─── IMPORTAR HISTORIAL ───────────────────────────────────────────────────────
+function dragOver(e){e.preventDefault();document.getElementById('drop-zone').classList.add('drag-over');}
+function dragLeave(e){document.getElementById('drop-zone').classList.remove('drag-over');}
+function dropFiles(e){e.preventDefault();document.getElementById('drop-zone').classList.remove('drag-over');handleFiles(e.dataTransfer.files);}
+
+function handleFiles(files){
+  pendingFiles=[];
+  Array.from(files).forEach(f=>{
+    if(!f.name.toLowerCase().endsWith('.xml')){return;}
+    const prod=detectProducto(f.name);
+    const pais=detectPais(f.name);
+    pendingFiles.push({file:f,nombre:f.name.replace('.xml',''),producto:prod,pais:pais,confirmado:false});
+  });
+  if(!pendingFiles.length){showMsg('msg-hist','No se encontraron archivos XML válidos.','error');return;}
+  renderPending();
+}
+
+function renderPending(){
+  if(!pendingFiles.length){document.getElementById('pending-list').style.display='none';return;}
+  document.getElementById('pending-list').style.display='block';
+  let html='';
+  pendingFiles.forEach((p,i)=>{
+    const needsProd=!p.producto;
+    const needsPais=!p.pais;
+    html+=`<div class="pending-item">
+      <i class="ti ti-file-code" style="font-size:20px;color:#028090"></i>
+      <div class="fi">
+        <div style="font-size:13px;font-weight:500;margin-bottom:6px">${p.nombre}</div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <div class="field" style="min-width:160px">
+            <label>Producto ${needsProd?'<span style="color:#a32d2d">*detectar</span>':''}</label>
+            <select onchange="pendingFiles[${i}].producto=this.value" style="padding:5px 8px;font-size:12px;border:1px solid #d0d8dc;border-radius:6px">
+              <option value="">Seleccionar...</option>
+              ${PRODUCTOS.map(pr=>`<option value="${pr}" ${p.producto===pr?'selected':''}>${pr}</option>`).join('')}
+            </select>
+          </div>
+          <div class="field" style="min-width:140px">
+            <label>País ${needsPais?'<span style="color:#a32d2d">*detectar</span>':''}</label>
+            <select onchange="pendingFiles[${i}].pais=this.value" style="padding:5px 8px;font-size:12px;border:1px solid #d0d8dc;border-radius:6px">
+              <option value="">Seleccionar...</option>
+              ${PAISES.map(pa=>`<option value="${pa}" ${p.pais===pa?'selected':''}>${pa}</option>`).join('')}
+            </select>
+          </div>
+        </div>
+      </div>
+      ${(!needsProd&&!needsPais)?'<span class="badge badge-green"><i class="ti ti-check"></i> Auto</span>':'<span class="badge badge-amber">Completar</span>'}
+    </div>`;
+  });
+  document.getElementById('pending-items').innerHTML=html;
+}
+
+function clearPending(){pendingFiles=[];document.getElementById('pending-list').style.display='none';}
+
+async function procesarTodos(){
+  const invalidos=pendingFiles.filter(p=>!p.producto||!p.pais);
+  if(invalidos.length){showMsg('msg-hist',`Completá el producto y país de todos los archivos antes de procesar (${invalidos.length} pendiente/s).`,'error');return;}
+
+  document.getElementById('progress-wrap').style.display='block';
+  document.getElementById('pending-list').style.display='none';
+  const total=pendingFiles.length;
+  let procesados=0,errores=0;
+
+  for(const pf of pendingFiles){
+    document.getElementById('progress-label').textContent=`Procesando ${pf.nombre}... (${procesados+1}/${total})`;
+    document.getElementById('progress-bar').style.width=Math.round((procesados/total)*100)+'%';
+    try{
+      const txt=await pf.file.text();
+      const proj=parseProjectXML(txt,pf.nombre,pf.producto,pf.pais);
+      if(proj)historial.push(proj);
+      else errores++;
+    }catch(e){errores++;}
+    procesados++;
+    await new Promise(r=>setTimeout(r,20));
+  }
+
+  document.getElementById('progress-bar').style.width='100%';
+  document.getElementById('progress-label').textContent='Procesamiento completado.';
+  setTimeout(()=>document.getElementById('progress-wrap').style.display='none',1500);
+
+  recalcularEstimaciones();
+  renderHistorial();
+  pendingFiles=[];
+  updateHistBadge();
+  renderLocalStats();
+  const msg=`${procesados-errores} proyecto/s importados correctamente.${errores?` ${errores} no pudieron procesarse.`:''}`;
+  showMsg('msg-hist',msg,errores?'error':'success');
+
+  // Autosave: primero local (instantáneo), luego GitHub en segundo plano
+  saveToLocal();
+  renderSyncStatus('Guardando en GitHub...','warn');
+  syncToGitHub().then(()=>{
+    renderSyncStatus(`✓ ${historial.length} proyectos guardados en GitHub. ${new Date().toLocaleString('es-UY')}`,'ok');
+    renderLocalStats();
+  }).catch(e=>{
+    renderSyncStatus(`Guardado local OK. Error al sincronizar con GitHub: ${e.message}`,'error');
+  });
+
+// Tareas a excluir del cómputo (comerciales/admin previas al proyecto)
+const TAREAS_EXCLUIR = [
+  'derivación comercial','asignación de consultor','pase a comercial',
+  'asignación consultor','derivacion comercial','pase comercial',
+  'pasaje de servicio','pasaje servicio','servicio activo a soporte',
+];
+
+function esTareaExcluida(name){
+  const n=name.toLowerCase();
+  return TAREAS_EXCLUIR.some(ex=>n.includes(ex));
+}
+
+function parseProjectXML(txt,nombre,producto,pais){
+  try{
+    const parser=new DOMParser();
+    const doc=parser.parseFromString(txt,'application/xml');
+
+    // ── 1. Fechas del proyecto (del nodo raíz, no de tareas) ──────────────────
+    const nsURI='http://schemas.microsoft.com/project';
+    function getProjectEl(tag){
+      // busca hijo directo del Project con ese tag
+      return doc.querySelector(`Project > ${tag}`) ||
+             doc.getElementsByTagNameNS(nsURI,tag)[0] ||
+             doc.querySelector(tag);
+    }
+
+    const startTxt=(getProjectEl('StartDate')||{}).textContent||'';
+    const finishTxt=(getProjectEl('FinishDate')||{}).textContent||'';
+    if(!startTxt||!finishTxt)return null;
+
+    const startDate=new Date(startTxt);
+    const planFinish=new Date(finishTxt);
+
+    // ── 2. Días hábiles reales del proyecto (Start→Finish sin feriados UY) ───
+    const diasReal=countWD(startDate,planFinish,pais);
+    // Feriados que cayeron dentro del período
+    const feriadosPeriodo=feriadosEnRango(startDate,planFinish,pais);
+
+    // ── 3. Distribuir días por fase usando fechas de tareas hoja ─────────────
+    //    Para cada fase, tomamos la fecha mínima de inicio y máxima de fin
+    //    de las tareas hoja que pertenecen a esa fase (excluyendo comerciales)
+    const faseRangos={};
+    FASES.forEach(f=>faseRangos[f]={min:null,max:null});
+
+    const tasks=doc.querySelectorAll('Task');
+    tasks.forEach(task=>{
+      const uid=(task.querySelector('UID')||{}).textContent||'0';
+      if(uid==='0')return;
+      const summary=(task.querySelector('Summary')||{}).textContent||'0';
+      const milestone=(task.querySelector('Milestone')||{}).textContent||'0';
+      if(summary==='1'||milestone==='1')return;
+
+      const name=(task.querySelector('Name')||{}).textContent||'';
+      if(esTareaExcluida(name))return;
+
+      const startStr=(task.querySelector('Start')||{}).textContent||'';
+      const finishStr=(task.querySelector('Finish')||{}).textContent||'';
+      if(!startStr||!finishStr)return;
+
+      const ts=new Date(startStr),tf=new Date(finishStr);
+      const fase=detectarFase(name);
+      if(!fase)return;
+
+      if(!faseRangos[fase].min||ts<faseRangos[fase].min)faseRangos[fase].min=ts;
+      if(!faseRangos[fase].max||tf>faseRangos[fase].max)faseRangos[fase].max=tf;
+    });
+
+    // Calcular días hábiles por fase a partir de los rangos detectados
+    const faseDias={};
+    FASES.forEach(f=>{
+      const r=faseRangos[f];
+      faseDias[f]=r.min&&r.max?countWD(r.min,r.max,pais):0;
+    });
+
+    // Si no se detectaron fases suficientes, distribuir proporcionalmente
+    const fasesConDatos=Object.values(faseDias).filter(v=>v>0).length;
+    if(fasesConDatos<3){
+      const propDefecto={inicio:0.08,integracion:0.13,implementacion:0.26,sit:0.13,uat:0.13,cutover:0.05,golive:0.03,hypercare:0.19};
+      KEYS.forEach((k,i)=>faseDias[FASES[i]]=Math.round(diasReal*(propDefecto[k]||0.1)));
+    }
+
+    return{
+      nombre,producto,pais,
+      fechaInicio:fmt(startDate),
+      fechaFinPlan:fmt(planFinish),
+      fechaFinReal:'',
+      diasPlan:diasReal,
+      diasReal,
+      feriadosPeriodo,
+      faseDias:{
+        inicio:faseDias['Inicio']||0,
+        integracion:faseDias['Integración']||0,
+        implementacion:faseDias['Implementación']||0,
+        sit:faseDias['SIT']||0,
+        uat:faseDias['UAT']||0,
+        cutover:faseDias['Cutover']||0,
+        golive:faseDias['Go Live']||0,
+        hypercare:faseDias['Hypercare']||0,
+      }
+    };
+  }catch(e){console.error('parseProjectXML error',e);return null;}
+}
+
+function detectarFase(name){
+  const n=name.toLowerCase();
+  if(n.includes('inicio')||n.includes('kickoff')||n.includes('kick-off')||n.includes('levantamiento'))return'Inicio';
+  if(n.includes('integr'))return'Integración';
+  if(n.includes('implement')||n.includes('configurac')||n.includes('desarrollo'))return'Implementación';
+  if(n.includes('sit')||n.includes('prueba integr')||n.includes('system integr'))return'SIT';
+  if(n.includes('uat')||n.includes('aceptac')||n.includes('usuario'))return'UAT';
+  if(n.includes('cutover')||n.includes('pase a prod')||n.includes('migrac'))return'Cutover';
+  if(n.includes('go live')||n.includes('golive')||n.includes('go-live')||n.includes('activac'))return'Go Live';
+  if(n.includes('hypercare')||n.includes('soporte post')||n.includes('post go'))return'Hypercare';
+  return null;
+}
+
+function recalcularEstimaciones(){
+  if(!historial.length)return;
+
+  // Agrupar por producto
+  const grupos={};
+  PRODUCTOS.forEach(p=>grupos[p]=[]);
+  historial.forEach(h=>{if(grupos[h.producto])grupos[h.producto].push(h);});
+
+  PRODUCTOS.forEach(prod=>{
+    const proyectos=grupos[prod];
+    if(!proyectos.length)return;
+    // Promediar cada fase
+    const nuevo={};
+    KEYS.forEach(k=>{
+      const vals=proyectos.map(p=>p.faseDias[k]||0).filter(v=>v>0);
+      if(vals.length)nuevo[k]=Math.round(vals.reduce((s,v)=>s+v,0)/vals.length);
+      else nuevo[k]=est[prod][k];
+    });
+    est[prod]=nuevo;
+    estFuente[prod]='historial ('+proyectos.length+' proy.)';
+  });
+
+  // Recalcular multiplicadores por país
+  const porPais={};
+  PAISES.forEach(p=>porPais[p]=[]);
+  historial.forEach(h=>{if(porPais[h.pais]&&h.diasReal>0&&h.diasPlan>0)porPais[h.pais].push(h.diasReal/h.diasPlan);});
+  PAISES.forEach(p=>{
+    if(porPais[p].length>=2){
+      const avg=porPais[p].reduce((s,v)=>s+v,0)/porPais[p].length;
+      multPaises[p]=Math.round(avg*100)/100;
+    }
+  });
+
+  renderEstTable();
+}
+
+function renderHistorial(){
+  if(!historial.length){document.getElementById('hist-resumen').style.display='none';return;}
+  document.getElementById('hist-resumen').style.display='block';
+
+  const totalD=historial.reduce((s,h)=>s+h.diasReal,0);
+  const avgD=Math.round(totalD/historial.length);
+  const conDesvio=historial.filter(h=>h.diasPlan&&h.diasReal&&Math.abs(h.diasReal-h.diasPlan)>5).length;
+
+  document.getElementById('hist-stats').innerHTML=`
+    <div class="stat"><div class="stat-val">${historial.length}</div><div class="stat-lbl">Proyectos importados</div></div>
+    <div class="stat"><div class="stat-val">${avgD}</div><div class="stat-lbl">Días promedio real</div></div>
+    <div class="stat"><div class="stat-val">${new Set(historial.map(h=>h.producto)).size}</div><div class="stat-lbl">Productos con datos</div></div>
+    <div class="stat"><div class="stat-val">${conDesvio}</div><div class="stat-lbl">Con desvíos >5 días</div></div>`;
+
+  let html='';
+  historial.forEach(h=>{
+    const desv=h.diasReal&&h.diasPlan?h.diasReal-h.diasPlan:null;
+    const desvStr=desv===null?'—':(desv>0?`<span style="color:#a32d2d">+${desv}</span>`:(desv<0?`<span style="color:#3b6d11">${desv}</span>`:'0'));
+    const ferCount=h.feriadosPeriodo?h.feriadosPeriodo.length:0;
+    const ferStr=ferCount?`<span class="badge badge-amber" style="font-size:10px" title="${h.feriadosPeriodo.map(f=>f.fecha+' '+f.nombre).join(', ')}">${ferCount} feriado/s</span>`:`<span style="color:#b0bcc0;font-size:11px">—</span>`;
+    html+=`<tr>
+      <td style="font-weight:500">${h.nombre}</td>
+      <td><span class="badge badge-blue" style="font-size:10px">${h.producto}</span></td>
+      <td><span class="badge badge-gray" style="font-size:10px">${h.pais}</span></td>
+      <td style="font-size:12px;color:#6e7c7c">${h.fechaInicio}</td>
+      <td style="font-size:12px;color:#6e7c7c">${h.fechaFinPlan}</td>
+      <td style="font-size:12px;color:#6e7c7c">${h.fechaFinReal||'—'}</td>
+      <td style="font-weight:500">${h.diasPlan||'—'}</td>
+      <td style="font-weight:500;color:#028090">${h.diasReal||'—'}</td>
+      <td>${desvStr}</td>
+      <td>${ferStr}</td>
+    </tr>`;
+  });
+  document.getElementById('hist-tbody').innerHTML=html;
+
+  // Promedios por producto+país
+  const grupos={};
+  historial.forEach(h=>{
+    const k=h.producto+'|'+h.pais;
+    if(!grupos[k])grupos[k]={prod:h.producto,pais:h.pais,dias:[],n:0};
+    grupos[k].dias.push(h.diasReal);grupos[k].n++;
+  });
+  let avgHtml='';
+  Object.values(grupos).forEach(g=>{
+    const avg=Math.round(g.dias.reduce((s,v)=>s+v,0)/g.dias.length);
+    const base=KEYS.reduce((s,k)=>s+(DEF_EST[g.prod]?.[k]||0),0);
+    const diff=avg-base;
+    const diffStr=diff===0?'igual al default':(diff>0?`+${diff} días vs default`:`${diff} días vs default`);
+    const diffColor=diff===0?'#6e7c7c':diff>5?'#a32d2d':diff<-5?'#3b6d11':'#854f0b';
+    avgHtml+=`<tr>
+      <td style="font-weight:500">${g.prod}</td>
+      <td>${g.pais}</td>
+      <td style="font-weight:600;color:#028090">${g.n}</td>
+      <td style="font-weight:600">${avg} días</td>
+      <td style="font-size:12px;color:${diffColor}">${diffStr}</td>
+    </tr>`;
+  });
+  document.getElementById('avg-tbody').innerHTML=avgHtml||'<tr><td colspan="5" style="color:#6e7c7c;text-align:center">Sin datos suficientes</td></tr>';
+
+  updateHistBadge();
+}
+
+function updateHistBadge(){
+  document.getElementById('hist-badge').innerHTML=historial.length?`<span class="badge badge-teal" style="font-size:10px;vertical-align:middle">${historial.length}</span>`:'';
+}
+
+function limpiarHistorial(){
+  if(!confirm('¿Estás segura de que querés borrar todo el historial importado? Se restaurarán las estimaciones por defecto.'))return;
+  historial=[];
+  est=JSON.parse(JSON.stringify(DEF_EST));
+  multPaises=JSON.parse(JSON.stringify(DEF_PAISES));
+  PRODUCTOS.forEach(p=>estFuente[p]='default');
+  renderHistorial();
+  renderEstTable();
+  updateHistBadge();
+  showMsg('msg-hist','Historial borrado. Estimaciones restauradas a valores por defecto.','success');
+}
+
+function exportHistExcel(){
+  if(!historial.length){alert('No hay historial para exportar.');return;}
+  const wb=XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet([
+    ['Proyecto','Producto','País','Fecha inicio','Fin planeado','Fin real','Días plan.','Días real','Desvío'],
+    ...historial.map(h=>[h.nombre,h.producto,h.pais,h.fechaInicio,h.fechaFinPlan,h.fechaFinReal||'',h.diasPlan,h.diasReal,(h.diasReal&&h.diasPlan)?h.diasReal-h.diasPlan:''])
+  ]),'Historial');
+  XLSX.writeFile(wb,'Historial_Proyectos.xlsx');
+}
+
+// ─── ESTIMACIONES ─────────────────────────────────────────────────────────────
+function renderEstTable(){
+  let html='';
+  PRODUCTOS.forEach(prod=>{
+    const e=est[prod];
+    const total=KEYS.reduce((s,k)=>s+(+e[k]||0),0);
+    const fuente=estFuente[prod]||'default';
+    const badge=fuente==='default'?'<span class="badge badge-gray" style="font-size:10px">Default</span>':`<span class="badge badge-teal" style="font-size:10px">${fuente}</span>`;
+    html+=`<tr><td style="font-weight:600">${prod}</td>`;
+    KEYS.forEach(k=>{html+=`<td><input class="est-input" type="number" min="0" value="${e[k]||0}" data-prod="${prod}" data-k="${k}" onchange="updEst(this)" style="width:54px;padding:4px 6px;font-size:12px;text-align:center;border:1px solid #d0d8dc;border-radius:6px"></td>`;});
+    html+=`<td style="font-weight:700;color:#028090" id="tot-${prod.replace(/[\s\/]/g,'_')}">${total}</td><td>${badge}</td></tr>`;
+  });
+  document.getElementById('est-body').innerHTML=html;
+  renderPaises();
+}
+function updEst(el){
+  est[el.dataset.prod][el.dataset.k]=+el.value||0;
+  const total=KEYS.reduce((s,k)=>s+(+est[el.dataset.prod][k]||0),0);
+  document.getElementById('tot-'+el.dataset.prod.replace(/[\s\/]/g,'_')).textContent=total;
+}
+function renderPaises(){
+  let html='';
+  Object.keys(multPaises).forEach(p=>{
+    html+=`<div class="field"><label>${p}</label><input type="number" step="0.05" min="0.5" max="3" value="${multPaises[p]}" data-p="${p}" onchange="multPaises[this.dataset.p]=+this.value" style="width:100%;padding:6px 8px;font-size:13px;border:1px solid #d0d8dc;border-radius:6px"></div>`;
+  });
+  document.getElementById('pais-grid').innerHTML=html;
+}
+function resetEst(){
+  est=JSON.parse(JSON.stringify(DEF_EST));
+  multPaises=JSON.parse(JSON.stringify(DEF_PAISES));
+  PRODUCTOS.forEach(p=>estFuente[p]='default');
+  renderEstTable();
+  showMsg('msg-est','Estimaciones restauradas a valores por defecto.','success');
+}
+
+// ─── GENERAR PLANNING ─────────────────────────────────────────────────────────
+function generarPlanning(){
+  const nom=document.getElementById('p-nombre').value.trim();
+  const cli=document.getElementById('p-cliente').value.trim();
+  const pais=document.getElementById('p-pais').value;
+  const prod=document.getElementById('p-producto').value;
+  const cons=document.getElementById('p-consultor').value.trim();
+  const fecha=document.getElementById('p-fecha').value;
+  const pmo=document.getElementById('p-pmo').value.trim()||'PMO';
+  const am=document.getElementById('p-am').value.trim();
+  const compx=+document.getElementById('p-complejidad').value;
+  const conInt=document.getElementById('p-integracion').value==='1';
+  const notas=document.getElementById('p-notas').value.trim();
+  if(!nom||!cli||!pais||!prod||!cons||!fecha){showMsg('msg-nuevo','Completá todos los campos obligatorios (*)','error');return;}
+
+  _currentPais=pais; // para que addWD use el país correcto globalmente
+
+  // Mostrar qué base se usa
+  const proyHist=historial.filter(h=>h.producto===prod);
+  const proyHistPais=historial.filter(h=>h.producto===prod&&h.pais===pais);
+  if(proyHist.length){
+    const base=proyHistPais.length?`${proyHistPais.length} proyectos de ${prod} en ${pais}`:`${proyHist.length} proyectos de ${prod} (todos los países)`;
+    document.getElementById('hist-info-box').style.display='block';
+    document.getElementById('hist-info-content').innerHTML=`<p style="font-size:13px;color:#028090"><i class="ti ti-database"></i> Estimaciones basadas en historial real: <strong>${base}</strong></p>`;
+  }else{document.getElementById('hist-info-box').style.display='none';}
+
+  const e=est[prod];
+  const mult=multPaises[pais]||1;
+  const base={};
+  KEYS.forEach(k=>{
+    let d=Math.round((e[k]||0)*mult*compx);
+    if(k==='integracion'&&!conInt)d=0;
+    base[k]=(!conInt&&k==='integracion')?0:Math.max(1,d);
+  });
+
+  let cur=new Date(fecha);
+  const fases=[];
+  FASES.forEach((nf,i)=>{
+    const key=KEYS[i],dias=base[key];
+    if(dias===0){fases.push({fase:nf,inicio:null,fin:null,dias:0});return;}
+    const ini=new Date(cur),fin=addWD(ini,dias-1,pais);
+    fases.push({fase:nf,inicio:ini,fin,dias});
+    cur=addWD(fin,1,pais);
+  });
+
+  const tareas=[];let idx=1;
+  fases.forEach(f=>{
+    if(!f.dias)return;
+    const tmpl=TAREAS[f.fase]||[];
+    const dpt=Math.max(1,Math.floor(f.dias/Math.max(tmpl.length,1)));
+    let c=new Date(f.inicio);
+    tmpl.forEach((t,ti)=>{
+      const isLast=ti===tmpl.length-1;
+      const fin=isLast?new Date(f.fin):addWD(c,dpt-1,pais);
+      tareas.push({id:idx++,tarea:t.t,fase:f.fase,responsable:t.r.replace(/Consultor/g,cons).replace(/PMO/g,pmo),dias:dpt,inicio:new Date(c),fin:new Date(fin)});
+      c=addWD(fin,1,pais);
+    });
+  });
+
+  const totalDias=fases.reduce((s,f)=>s+f.dias,0);
+  const fechaFin=fases.filter(f=>f.fin).slice(-1)[0]?.fin;
+  const feriadosImpacto=feriadosEnRango(new Date(fecha),fechaFin||new Date(fecha),pais);
+  planData={nom,cli,pais,prod,cons,pmo,am,notas,fases,tareas,totalDias,fechaInicio:new Date(fecha),fechaFin,compx,conInt,baseHistorial:proyHist.length>0,feriados:feriadosImpacto};
+
+  detectarRiesgos(prod,pais,totalDias,conInt,compx,proyHist);
+  renderPlanning();
+  showMsg('msg-nuevo','','success');
+  switchTab('planning');
+  document.getElementById('planning-placeholder').style.display='none';
+  document.getElementById('planning-content').style.display='block';
+}
+
+function detectarRiesgos(prod,pais,dias,conInt,compx,histProd){
+  rAuto=[];
+  (RIESGOS_PROD[prod]||[]).forEach(txt=>rAuto.push({txt,impacto:'Medio',tipo:'Producto',mit:'Identificar dependencias en kickoff y escalar a PMO.'}));
+  if(!conInt)rAuto.push({txt:'Sin fase de integración: validar conectividad del cliente de antemano',impacto:'Alto',tipo:'Técnico',mit:'Solicitar confirmación técnica escrita antes del inicio.'});
+  if(compx>=1.3)rAuto.push({txt:'Complejidad alta: margen reducido para imprevistos',impacto:'Alto',tipo:'Gestión',mit:'Revisar el planning cada 2 semanas con el equipo y cliente.'});
+  if(dias>=60)rAuto.push({txt:'Proyecto de larga duración: riesgo de cambio de prioridades del cliente',impacto:'Medio',tipo:'Cronograma',mit:'Establecer checkpoints quincenales con el cliente.'});
+  if(dias>=90)rAuto.push({txt:'Duración extendida: revisión formal del planning a mitad de proyecto',impacto:'Alto',tipo:'Cronograma',mit:'Agendar revisión de planning en semana 6.'});
+  (RIESGOS_PAIS[pais]||[]).forEach(txt=>rAuto.push({txt,impacto:'Alto',tipo:'Regulatorio',mit:'Coordinar con equipo legal/compliance antes del inicio.'}));
+  // Riesgos del historial
+  if(histProd.length){
+    const conDesvio=histProd.filter(h=>h.diasPlan&&h.diasReal&&h.diasReal>h.diasPlan*1.2);
+    if(conDesvio.length/histProd.length>0.3)rAuto.push({txt:`${Math.round(conDesvio.length/histProd.length*100)}% de proyectos similares tuvieron desvíos de más del 20% en el cronograma`,impacto:'Alto',tipo:'Historial',mit:'Agregar buffer del 15-20% al planning y revisar hitos semanalmente.'});
+    const avgReal=Math.round(histProd.reduce((s,h)=>s+h.diasReal,0)/histProd.length);
+    if(avgReal>dias*1.15)rAuto.push({txt:`El promedio real histórico (${avgReal} días) supera la estimación actual. Considerar ampliar el planning.`,impacto:'Medio',tipo:'Historial',mit:'Revisar estimaciones con el equipo antes de presentar al cliente.'});
+  }
+  updateRiskBadge();renderRiesgos();
+}
+
+function updateRiskBadge(){
+  const total=rAuto.length+rManuales.length;
+  document.getElementById('risk-badge').innerHTML=total?`<span class="badge badge-red" style="font-size:10px;vertical-align:middle">${total}</span>`:'';
+}
+
+function renderPlanning(){
+  const p=planData;
+  const histLabel=p.baseHistorial?'<span class="badge badge-teal" style="font-size:10px">Base: historial real</span>':'<span class="badge badge-gray" style="font-size:10px">Base: estimación default</span>';
+  document.getElementById('plan-stats').innerHTML=`
+    <div class="stat"><div class="stat-val">${p.totalDias}</div><div class="stat-lbl">Días hábiles</div></div>
+    <div class="stat"><div class="stat-val">${p.fases.filter(f=>f.dias>0).length}</div><div class="stat-lbl">Fases activas</div></div>
+    <div class="stat"><div class="stat-val">${p.tareas.length}</div><div class="stat-lbl">Tareas</div></div>
+    <div class="stat"><div class="stat-val">${rAuto.length+rManuales.length}</div><div class="stat-lbl">Riesgos</div></div>`;
+  document.getElementById('plan-info').innerHTML=`
+    <div class="field"><label>Proyecto</label><div style="font-size:14px;font-weight:600;margin-top:2px">${p.nom} ${histLabel}</div></div>
+    <div class="field"><label>Cliente</label><div style="font-size:13px;margin-top:2px">${p.cli} — ${p.pais}</div></div>
+    <div class="field"><label>Producto / Consultor</label><div style="font-size:13px;margin-top:2px">${p.prod} / ${p.cons}</div></div>
+    <div class="field"><label>Fecha inicio</label><div style="font-size:13px;margin-top:2px">${fmt(p.fechaInicio)}</div></div>
+    <div class="field"><label>Fecha fin estimada</label><div style="font-size:14px;font-weight:600;color:#028090;margin-top:2px">${fmt(p.fechaFin)}</div></div>
+    ${p.notas?`<div class="field"><label>Notas</label><div style="font-size:12px;color:#6e7c7c;margin-top:2px">${p.notas}</div></div>`:''}`;
+
+  // Bloque de feriados
+  const usaFeriados=['Uruguay','Paraguay','Bolivia'].includes(p.pais);
+  let ferBlock='';
+  if(usaFeriados){
+    if(p.feriados&&p.feriados.length){
+      const lista=p.feriados.map(f=>`<span class="badge badge-amber" style="margin:2px 3px 2px 0;font-size:11px">${f.fecha} — ${f.nombre}</span>`).join('');
+      ferBlock=`<div class="card" style="border-left:3px solid #854f0b;margin-top:0">
+        <div class="card-title" style="color:#854f0b">Feriados de Uruguay descontados del planning (${p.feriados.length})</div>
+        <p style="font-size:12px;color:#6e7c7c;margin-bottom:10px">Estos feriados caen en días hábiles dentro del período del proyecto y ya fueron excluidos del cómputo de días.</p>
+        <div>${lista}</div>
+      </div>`;
+    }else{
+      ferBlock=`<div class="card" style="border-left:3px solid #3b6d11;margin-top:0">
+        <div class="card-title" style="color:#3b6d11">Feriados de Uruguay</div>
+        <p style="font-size:13px;color:#6e7c7c">No hay feriados de Uruguay que caigan en días hábiles dentro del período del proyecto.</p>
+      </div>`;
+    }
+  }
+  document.getElementById('plan-feriados').innerHTML=ferBlock;
+  const maxD=p.totalDias;let gHtml='',off=0;
+  p.fases.forEach((f,i)=>{
+    if(!f.dias)return;
+    const w=Math.max(3,Math.round((f.dias/maxD)*480)),ml=Math.round((off/maxD)*480);
+    gHtml+=`<tr><td style="font-weight:500;font-size:13px">${f.fase}</td>
+      <td style="font-size:12px;color:#6e7c7c">${fmt(f.inicio)}</td>
+      <td style="font-size:12px;color:#6e7c7c">${fmt(f.fin)}</td>
+      <td style="font-weight:600;color:#028090">${f.dias}</td>
+      <td><div style="margin-left:${ml}px;width:${w}px;height:20px;border-radius:4px;background:${COLORES[i%COLORES.length]}"></div></td></tr>`;
+    off+=f.dias;
+  });
+  document.getElementById('gantt-body').innerHTML=gHtml;
+
+  let tHtml='';
+  p.tareas.forEach(t=>{
+    tHtml+=`<tr><td style="color:#6e7c7c;font-size:12px">${t.id}</td>
+      <td>${t.tarea}</td>
+      <td><span class="badge ${FASE_BADGE[t.fase]||'badge-gray'}">${t.fase}</span></td>
+      <td style="font-size:12px;color:#6e7c7c">${t.responsable}</td>
+      <td style="font-weight:600">${t.dias}</td>
+      <td style="font-size:12px">${fmt(t.inicio)}</td>
+      <td style="font-size:12px">${fmt(t.fin)}</td></tr>`;
+  });
+  document.getElementById('tasks-body').innerHTML=tHtml;
+}
+
+function renderRiesgos(){
+  document.getElementById('riesgos-placeholder').style.display='none';
+  document.getElementById('riesgos-content').style.display='block';
+  const iC={Alto:'badge-red',Medio:'badge-amber',Bajo:'badge-green'};
+  const tC={Producto:'badge-blue',Técnico:'badge-red',Gestión:'badge-amber',Cronograma:'badge-gray',Regulatorio:'badge-red',Historial:'badge-purple',Manual:'badge-gray'};
+  let html=rAuto.length?'':'<p style="color:#6e7c7c;font-size:13px;padding:8px 0">No se detectaron riesgos automáticos.</p>';
+  rAuto.forEach(r=>{
+    html+=`<div class="risk-item"><div style="flex:1">
+      <div style="display:flex;gap:6px;margin-bottom:6px"><span class="badge ${tC[r.tipo]||'badge-gray'}">${r.tipo}</span><span class="badge ${iC[r.impacto]}">${r.impacto}</span></div>
+      <p style="font-size:13px;margin-bottom:5px">${r.txt}</p>
+      <p style="font-size:11px;color:#6e7c7c"><i class="ti ti-shield-check" style="font-size:12px"></i> ${r.mit}</p>
+    </div></div>`;
+  });
+  document.getElementById('riesgos-lista').innerHTML=html;
+  renderRM();
+}
+function agregarRM(){
+  const desc=document.getElementById('r-desc').value.trim();
+  if(!desc){alert('Ingresá una descripción.');return;}
+  rManuales.push({txt:desc,impacto:document.getElementById('r-impacto').value,mit:document.getElementById('r-mit').value.trim()||'Sin mitigación definida.',tipo:'Manual'});
+  document.getElementById('r-desc').value='';document.getElementById('r-mit').value='';
+  updateRiskBadge();renderRM();
+}
+function renderRM(){
+  if(!rManuales.length){document.getElementById('riesgos-manuales-card').style.display='none';return;}
+  document.getElementById('riesgos-manuales-card').style.display='block';
+  const iC={Alto:'badge-red',Medio:'badge-amber',Bajo:'badge-green'};
+  let html='';
+  rManuales.forEach((r,i)=>{
+    html+=`<div class="risk-item"><div style="flex:1">
+      <div style="display:flex;gap:6px;margin-bottom:6px"><span class="badge badge-gray">Manual</span><span class="badge ${iC[r.impacto]}">${r.impacto}</span></div>
+      <p style="font-size:13px;margin-bottom:5px">${r.txt}</p>
+      <p style="font-size:11px;color:#6e7c7c"><i class="ti ti-shield-check" style="font-size:12px"></i> ${r.mit}</p>
+    </div><button class="btn btn-sm btn-danger" onclick="rManuales.splice(${i},1);updateRiskBadge();renderRM()"><i class="ti ti-trash"></i></button></div>`;
+  });
+  document.getElementById('riesgos-manuales').innerHTML=html;
+}
+
+// ─── EXPORTAR ─────────────────────────────────────────────────────────────────
+function exportExcel(){
+  if(!planData){alert('Generá un planning primero.');return;}
+  const p=planData,wb=XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet([['Proyecto',p.nom],['Cliente',p.cli],['País',p.pais],['Producto',p.prod],['Consultor',p.cons],['PMO',p.pmo],['AM',p.am],['Fecha inicio',fmt(p.fechaInicio)],['Fecha fin est.',fmt(p.fechaFin)],['Total días',p.totalDias],['Base estimación',p.baseHistorial?'Historial real':'Default'],['Notas',p.notas]]),'Resumen');
+  XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet([['Fase','Inicio','Fin','Días'],...p.fases.filter(f=>f.dias>0).map(f=>[f.fase,fmt(f.inicio),fmt(f.fin),f.dias])]),'Fases');
+  XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet([['#','Tarea','Fase','Responsable','Días','Inicio','Fin'],...p.tareas.map(t=>[t.id,t.tarea,t.fase,t.responsable,t.dias,fmt(t.inicio),fmt(t.fin)])]),'Tareas');
+  XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet([['Tipo','Descripción','Impacto','Mitigación'],...rAuto.concat(rManuales).map(r=>[r.tipo,r.txt,r.impacto,r.mit])]),'Riesgos');
+  if(p.feriados&&p.feriados.length){
+    XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet([['Fecha','Feriado'],['Nota','Feriados de Uruguay descontados del planning'],...p.feriados.map(f=>[f.fecha,f.nombre])]),'Feriados');
+  }
+  XLSX.writeFile(wb,`Planning_${p.nom.replace(/\s/g,'_')}.xlsx`);
+}
+function exportMPP(){
+  if(!planData){alert('Generá un planning primero.');return;}
+  const p=planData;
+  let xml=`<?xml version="1.0" encoding="UTF-8"?>\n<Project xmlns="http://schemas.microsoft.com/project">\n  <Name>${p.nom}</Name>\n  <Company>${p.cli}</Company>\n  <Manager>${p.cons}</Manager>\n  <StartDate>${p.fechaInicio.toISOString()}</StartDate>\n  <Tasks>`;
+  p.tareas.forEach(t=>{xml+=`\n    <Task><UID>${t.id}</UID><ID>${t.id}</ID><Name>${t.tarea}</Name><Duration>PT${t.dias*8}H0M0S</Duration><Start>${t.inicio.toISOString()}</Start><Finish>${t.fin.toISOString()}</Finish><Notes>Fase: ${t.fase} | ${t.responsable}</Notes></Task>`;});
+  xml+=`\n  </Tasks>\n</Project>`;
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([xml],{type:'application/xml'}));a.download=`Planning_${p.nom.replace(/\s/g,'_')}.xml`;a.click();
+}
+function exportRiesgos(){
+  if(!rAuto.length&&!rManuales.length){alert('No hay riesgos para exportar.');return;}
+  const wb=XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet([['Tipo','Descripción','Impacto','Mitigación'],...rAuto.concat(rManuales).map(r=>[r.tipo,r.txt,r.impacto,r.mit])]),'Riesgos');
+  XLSX.writeFile(wb,`Riesgos_${planData?planData.nom:'proyecto'}.xlsx`);
+}
+function resetForm(){['p-nombre','p-cliente','p-consultor','p-pmo','p-am','p-notas'].forEach(id=>document.getElementById(id).value='');['p-pais','p-producto'].forEach(id=>document.getElementById(id).value='');document.getElementById('msg-nuevo').style.display='none';document.getElementById('hist-info-box').style.display='none';}
+
+// ─── PERSISTENCIA: localStorage + GitHub ─────────────────────────────────────
+
+const LS_KEY='projectconsultoria_db';
+const LS_CFG='projectconsultoria_cfg';
+
+// Estructura de la base de datos
+function getDBSnapshot(){
+  return{
+    version:2,
+    lastSaved:new Date().toISOString(),
+    historial,
+    estimaciones:est,
+    multPaises,
+    estFuente,
+  };
+}
+
+function applyDBSnapshot(db){
+  if(!db||!db.version)return false;
+  if(db.historial)historial=db.historial;
+  if(db.estimaciones)est=db.estimaciones;
+  if(db.multPaises)multPaises=db.multPaises;
+  if(db.estFuente)estFuente=db.estFuente;
+  return true;
+}
+
+// ── localStorage ──────────────────────────────────────────────────────────────
+function saveToLocal(){
+  try{
+    localStorage.setItem(LS_KEY,JSON.stringify(getDBSnapshot()));
+    updateLocalStats();
+    return true;
+  }catch(e){console.error('localStorage save error',e);return false;}
+}
+
+function loadFromLocal(){
+  try{
+    const raw=localStorage.getItem(LS_KEY);
+    if(!raw)return false;
+    const db=JSON.parse(raw);
+    return applyDBSnapshot(db);
+  }catch(e){return false;}
+}
+
+function updateLocalStats(){
+  try{
+    const raw=localStorage.getItem(LS_KEY);
+    if(!raw){document.getElementById('local-stats').textContent='No hay datos guardados localmente.';return;}
+    const db=JSON.parse(raw);
+    const saved=db.lastSaved?new Date(db.lastSaved).toLocaleString('es-UY'):'—';
+    const hist=db.historial?db.historial.length:0;
+    document.getElementById('local-stats').innerHTML=
+      `<span class="badge badge-green" style="margin-right:6px"><i class="ti ti-check"></i> Datos guardados</span>
+       <span style="color:#6e7c7c">Última actualización: <strong>${saved}</strong> · ${hist} proyectos en historial</span>`;
+  }catch(e){document.getElementById('local-stats').textContent='Error leyendo datos locales.';}
+}
+
+function clearLocalStorage(){
+  if(!confirm('¿Borrás todos los datos guardados en este navegador? Esta acción no afecta GitHub.'))return;
+  localStorage.removeItem(LS_KEY);
+  updateLocalStats();
+  showMsg('msg-config','Datos locales borrados. Los datos en GitHub siguen intactos.','success');
+}
+
+// ── Config GitHub ─────────────────────────────────────────────────────────────
+function loadConfig(){
+  try{
+    const raw=localStorage.getItem(LS_CFG);
+    if(!raw)return null;
+    return JSON.parse(raw);
+  }catch(e){return null;}
+}
+
+function saveConfig(){
+  const cfg={
+    user:document.getElementById('cfg-user').value.trim(),
+    repo:document.getElementById('cfg-repo').value.trim(),
+    token:document.getElementById('cfg-token').value.trim(),
+    file:document.getElementById('cfg-file').value.trim()||'db_consultoria.json',
+  };
+  if(!cfg.user||!cfg.repo||!cfg.token){
+    showMsg('msg-config','Completá usuario, repositorio y token.','error');return;
+  }
+  localStorage.setItem(LS_CFG,JSON.stringify(cfg));
+  showMsg('msg-config','Configuración guardada. Probá la conexión antes de sincronizar.','success');
+  updateSyncStatus();
+}
+
+function fillConfigForm(){
+  const cfg=loadConfig();
+  if(!cfg)return;
+  document.getElementById('cfg-user').value=cfg.user||'';
+  document.getElementById('cfg-repo').value=cfg.repo||'';
+  document.getElementById('cfg-token').value=cfg.token||'';
+  document.getElementById('cfg-file').value=cfg.file||'db_consultoria.json';
+}
+
+// ── GitHub API ────────────────────────────────────────────────────────────────
+async function ghHeaders(){
+  const cfg=loadConfig();
+  if(!cfg||!cfg.token)throw new Error('No hay token configurado. Configurá GitHub en la pestaña Base de datos.');
+  return{
+    'Authorization':`token ${cfg.token}`,
+    'Accept':'application/vnd.github.v3+json',
+    'Content-Type':'application/json',
+  };
+}
+
+async function ghGetFile(){
+  const cfg=loadConfig();
+  const url=`https://api.github.com/repos/${cfg.user}/${cfg.repo}/contents/${cfg.file}`;
+  const res=await fetch(url,{headers:await ghHeaders()});
+  if(res.status===404)return null; // archivo no existe aún
+  if(!res.ok)throw new Error(`GitHub error ${res.status}: ${res.statusText}`);
+  return res.json();
+}
+
+async function ghPutFile(content,sha){
+  const cfg=loadConfig();
+  const url=`https://api.github.com/repos/${cfg.user}/${cfg.repo}/contents/${cfg.file}`;
+  const body={
+    message:`Actualización automática de base de datos — ${new Date().toLocaleString('es-UY')}`,
+    content:btoa(unescape(encodeURIComponent(JSON.stringify(content,null,2)))),
+  };
+  if(sha)body.sha=sha;
+  const res=await fetch(url,{method:'PUT',headers:await ghHeaders(),body:JSON.stringify(body)});
+  if(!res.ok){const err=await res.json();throw new Error(err.message||`GitHub error ${res.status}`);}
+  return res.json();
+}
+
+async function testGitHubConnection(){
+  showMsg('msg-config','Probando conexión...','success');
+  try{
+    const cfg=loadConfig();
+    if(!cfg||!cfg.token){showMsg('msg-config','Guardá la configuración primero.','error');return;}
+    const url=`https://api.github.com/repos/${cfg.user}/${cfg.repo}`;
+    const res=await fetch(url,{headers:await ghHeaders()});
+    if(res.ok){
+      const data=await res.json();
+      showMsg('msg-config',`✓ Conexión exitosa con "${data.full_name}". Ya podés sincronizar.`,'success');
+    }else{
+      showMsg('msg-config',`Error de conexión (${res.status}). Verificá usuario, repositorio y token.`,'error');
+    }
+  }catch(e){showMsg('msg-config','Error: '+e.message,'error');}
+}
+
+async function syncToGitHub(){
+  const cfg=loadConfig();
+  if(!cfg||!cfg.token){
+    switchTab('config');
+    showMsg('msg-config','Configurá GitHub primero (usuario, repositorio y token).','error');
+    return;
+  }
+  updateSyncStatus('Guardando en GitHub...');
+  try{
+    const existing=await ghGetFile();
+    const sha=existing?existing.sha:null;
+    const db=getDBSnapshot();
+    await ghPutFile(db,sha);
+    saveToLocal(); // también en local
+    updateSyncStatus('ok');
+    // Mostrar feedback en la tab config si está abierta
+    showMsg('msg-config',`✓ Guardado en GitHub correctamente (${new Date().toLocaleString('es-UY')}).`,'success');
+  }catch(e){
+    updateSyncStatus('error');
+    showMsg('msg-config','Error al guardar en GitHub: '+e.message,'error');
+    switchTab('config');
+  }
+}
+
+async function loadFromGitHub(){
+  const cfg=loadConfig();
+  if(!cfg||!cfg.token){
+    switchTab('config');
+    showMsg('msg-config','Configurá GitHub primero.','error');
+    return;
+  }
+  updateSyncStatus('Cargando desde GitHub...');
+  try{
+    const file=await ghGetFile();
+    if(!file){
+      updateSyncStatus('no-file');
+      showMsg('msg-config','No existe archivo de datos en GitHub todavía. Importá proyectos y guardá primero.','error');
+      switchTab('config');
+      return;
+    }
+    const content=JSON.parse(decodeURIComponent(escape(atob(file.content.replace(/\n/g,'')))));
+    if(applyDBSnapshot(content)){
+      saveToLocal();
+      recalcularEstimaciones();
+      renderHistorial();
+      renderEstTable();
+      updateHistBadge();
+      updateSyncStatus('ok');
+      showMsg('msg-config',`✓ Datos cargados desde GitHub. ${historial.length} proyectos en historial.`,'success');
+      switchTab('config');
+    }else{
+      showMsg('msg-config','El archivo en GitHub no tiene el formato esperado.','error');
+      updateSyncStatus('error');
+    }
+  }catch(e){
+    updateSyncStatus('error');
+    showMsg('msg-config','Error al cargar desde GitHub: '+e.message,'error');
+    switchTab('config');
+  }
+}
+
+function updateSyncStatus(state){
+  const el=document.getElementById('sync-status');
+  const badge=document.getElementById('sync-badge');
+  const cfg=loadConfig();
+
+  if(!cfg||!cfg.token){
+    el.innerHTML='<span class="badge badge-gray"><i class="ti ti-plug-x"></i> Sin configurar</span> &nbsp;Configurá tu token de GitHub para sincronizar entre dispositivos.';
+    badge.innerHTML='';
+    return;
+  }
+  if(state==='ok'||state===undefined){
+    const ts=new Date().toLocaleString('es-UY');
+    el.innerHTML=`<span class="badge badge-green"><i class="ti ti-cloud-check"></i> Conectado</span> &nbsp;Repositorio: <strong>${cfg.user}/${cfg.repo}</strong> · Último sync: ${state==='ok'?ts:'—'}`;
+    badge.innerHTML='<span class="badge badge-green" style="font-size:10px;vertical-align:middle"><i class="ti ti-cloud-check"></i></span>';
+  }else if(state==='error'){
+    el.innerHTML='<span class="badge badge-red"><i class="ti ti-cloud-x"></i> Error de sincronización</span> &nbsp;Revisá tu token y conexión a internet.';
+    badge.innerHTML='<span class="badge badge-red" style="font-size:10px;vertical-align:middle">!</span>';
+  }else if(state==='no-file'){
+    el.innerHTML=`<span class="badge badge-amber"><i class="ti ti-cloud-upload"></i> Sin datos en GitHub</span> &nbsp;Repositorio: <strong>${cfg.user}/${cfg.repo}</strong> · Aún no se guardaron datos.`;
+    badge.innerHTML='';
+  }else{
+    el.innerHTML=`<span class="badge badge-blue"><i class="ti ti-loader"></i> ${state}</span>`;
+  }
+}
+
+// ── Auto-guardado ─────────────────────────────────────────────────────────────
+// Cada vez que cambia el historial o estimaciones, guardar en local automáticamente
+function autoSave(){
+  saveToLocal();
+  // badge indicador en topbar
+  const ind=document.getElementById('autosave-ind');
+  if(ind){ind.textContent='✓ Guardado';ind.style.opacity='1';setTimeout(()=>ind.style.opacity='0',2000);}
+}
+
+// ── Backup JSON local ─────────────────────────────────────────────────────────
+function exportLocalBackup(){
+  const db=getDBSnapshot();
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([JSON.stringify(db,null,2)],{type:'application/json'}));
+  a.download=`backup_consultoria_${new Date().toISOString().split('T')[0]}.json`;
+  a.click();
+}
+
+function doImportBackup(input){
+  const file=input.files[0];
+  if(!file)return;
+  const reader=new FileReader();
+  reader.onload=e=>{
+    try{
+      const db=JSON.parse(e.target.result);
+      if(applyDBSnapshot(db)){
+        saveToLocal();
+        recalcularEstimaciones();
+        renderHistorial();
+        renderEstTable();
+        updateHistBadge();
+        showMsg('msg-config',`✓ Backup restaurado. ${historial.length} proyectos cargados.`,'success');
+      }else{showMsg('msg-config','El archivo no tiene el formato correcto.','error');}
+    }catch(err){showMsg('msg-config','Error leyendo el archivo: '+err.message,'error');}
+    input.value='';
+  };
+  reader.readAsText(file);
+}
+
+// ─── INIT ─────────────────────────────────────────────────────────────────────
+(async function init(){
+  // 1. Cargar config de GitHub guardada
+  loadConfig();
+
+  // 2. Intentar cargar desde localStorage primero (instantáneo)
+  const localOk=loadFromLocal();
+  if(localOk){
+    recalcularEstimaciones();
+    renderHistorial();
+    renderEstTable();
+    updateHistBadge();
+    renderSyncStatus(`✓ Datos cargados desde este navegador (${historial.length} proyectos). Sincronizando con GitHub...`);
+  }
+
+  // 3. Intentar sincronizar desde GitHub en segundo plano
+  const cfg=loadConfig();
+  if(cfg&&cfg.token&&cfg.user&&cfg.repo){
+    try{
+      const ghData=await ghGet(cfg);
+      if(ghData){
+        // Si GitHub tiene más proyectos que local, tomar GitHub
+        const ghSnap=JSON.parse(atob(ghData.content.replace(/\n/g,'')));
+        const ghHist=ghSnap.historial||[];
+        if(ghHist.length>=historial.length){
+          applyDBSnapshot(ghSnap);
+          saveToLocal();
+          recalcularEstimaciones();
+          renderHistorial();
+          renderEstTable();
+          updateHistBadge();
+          renderSyncStatus(`✓ Sincronizado con GitHub (${historial.length} proyectos). Última sync: ${new Date().toLocaleString('es-UY')}`,'ok');
+        }else{
+          renderSyncStatus(`✓ Local tiene más datos (${historial.length} proy.) que GitHub (${ghHist.length} proy.). Guardá para actualizar GitHub.`,'warn');
+        }
+      }else{
+        renderSyncStatus(localOk?`Datos locales activos (${historial.length} proyectos). GitHub aún no tiene datos — guardá para crear la base.`:'GitHub vacío. Importá proyectos y guardá.','warn');
+      }
+    }catch(e){
+      renderSyncStatus(localOk?`Datos locales activos (${historial.length} proyectos). Sin conexión a GitHub: ${e.message}`:'Sin datos locales ni conexión a GitHub.','error');
+    }
+  }else{
+    renderSyncStatus(localOk?`Datos locales activos (${historial.length} proyectos). Configurá GitHub para sincronizar entre dispositivos.`:'Sin datos. Configurá GitHub o importá proyectos XML.','warn');
+  }
+
+  renderEstTable();
+  document.getElementById('p-fecha').valueAsDate=new Date();
+  renderLocalStats();
+})();
+
+async function ghGet(cfg){
+  const url=`https://api.github.com/repos/${cfg.user}/${cfg.repo}/contents/${cfg.file||'db_consultoria.json'}`;
+  const res=await fetch(url,{headers:{'Authorization':`token ${cfg.token}`,'Accept':'application/vnd.github.v3+json'}});
+  if(res.status===404)return null;
+  if(!res.ok)throw new Error(`GitHub error ${res.status}`);
+  return res.json();
+}
+
+function renderSyncStatus(msg,type='ok'){
+  const colors={ok:'#3b6d11',warn:'#854f0b',error:'#a32d2d'};
+  const icons={ok:'ti-circle-check',warn:'ti-alert-triangle',error:'ti-circle-x'};
+  const el=document.getElementById('sync-status');
+  if(el)el.innerHTML=`<i class="ti ${icons[type]||'ti-info-circle'}" style="color:${colors[type]||'#028090'};margin-right:6px"></i><span style="color:${colors[type]||'#028090'}">${msg}</span>`;
+}
+
+function renderLocalStats(){
+  try{
+    const raw=localStorage.getItem('pc_db');
+    const size=raw?Math.round(raw.length/1024):0;
+    const el=document.getElementById('local-stats');
+    if(el)el.innerHTML=`<span style="color:#028090;font-weight:500">${historial.length} proyectos</span> guardados localmente · ${size} KB usados en este navegador`;
+  }catch(e){}
+}
+</script>
+</body>
+</html>
