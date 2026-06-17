@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "lastSaved": "2026-06-17T19:38:31.619Z",
+  "lastSaved": "2026-06-17T19:38:51.846Z",
   "historial": [
     {
       "nombre": "Grupo Latam (214182520016, 210327260017, 216865230012, 215976360013) - Recepción - xDoc",
@@ -79,6 +79,44 @@
         "golive": 1,
         "hypercare": 0
       }
+    },
+    {
+      "nombre": "SIOM PARAGUAY SA (801223385) - Smart Supply",
+      "producto": "Smart Supply",
+      "pais": "Paraguay",
+      "fechaInicio": "2026-03-05",
+      "fechaFinPlan": "2026-06-12",
+      "fechaFinReal": "",
+      "diasPlan": 68,
+      "diasReal": 68,
+      "feriadosPeriodo": [
+        {
+          "fecha": "2026-04-02",
+          "nombre": "Feriado"
+        },
+        {
+          "fecha": "2026-04-03",
+          "nombre": "Feriado"
+        },
+        {
+          "fecha": "2026-05-01",
+          "nombre": "Día del Trabajo"
+        },
+        {
+          "fecha": "2026-05-18",
+          "nombre": "Batalla de Las Piedras"
+        }
+      ],
+      "faseDias": {
+        "inicio": 0,
+        "integracion": 23,
+        "implementacion": 46,
+        "sit": 0,
+        "uat": 7,
+        "cutover": 0,
+        "golive": 1,
+        "hypercare": 0
+      }
     }
   ],
   "estimaciones": {
@@ -144,8 +182,8 @@
     },
     "Smart Supply": {
       "inicio": 4,
-      "integracion": 8,
-      "implementacion": 15,
+      "integracion": 23,
+      "implementacion": 46,
       "sit": 7,
       "uat": 7,
       "cutover": 3,
@@ -172,6 +210,6 @@
     "API Recepción": "default",
     "xPos": "default",
     "SSO": "default",
-    "Smart Supply": "default"
+    "Smart Supply": "historial (1 proy.)"
   }
 }
