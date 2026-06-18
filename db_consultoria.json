@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "lastSaved": "2026-06-17T20:59:03.346Z",
+  "lastSaved": "2026-06-18T17:55:17.369Z",
   "historial": [
     {
       "nombre": "Grupo Latam (214182520016, 210327260017, 216865230012, 215976360013) - RecepciÃ³n - xDoc",
@@ -275,6 +275,17 @@
         "Bolivia"
       ],
       "email": "valentina.gimenez@gosocket.net"
+    },
+    {
+      "id": 4,
+      "nombre": "Fiorella Gómez Sánchez",
+      "rol": "Account Manager",
+      "paises": [
+        "Paraguay",
+        "Uruguay",
+        "Bolivia"
+      ],
+      "email": "fiorella.gomez-sanchez@gosocket.net"
     }
   ]
 }
