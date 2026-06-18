@@ -1,40 +1,28 @@
 {
   "version": 2,
-  "lastSaved": "2026-06-18T20:12:42.578Z",
+  "lastSaved": "2026-06-18T20:13:34.320Z",
   "historial": [
     {
-      "nombre": "Grupo Latam (214182520016, 210327260017, 216865230012, 215976360013) - RecepciÃ³n - xDoc",
+      "nombre": "Bontarden SA (218512720016) - Set Básico - xDoc",
       "producto": "xDoc Global",
       "pais": "Uruguay",
-      "fechaInicio": "2023-05-30",
-      "fechaFinPlan": "2024-05-20",
+      "fechaInicio": "2023-08-30",
+      "fechaFinPlan": "2024-01-05",
       "fechaFinReal": "",
-      "diasPlan": 241,
-      "diasReal": 241,
+      "diasPlan": 88,
+      "diasReal": 88,
       "feriadosPeriodo": [
         {
-          "fecha": "2023-06-19",
-          "nombre": "Natalicio de Artigas"
-        },
-        {
-          "fecha": "2023-07-18",
-          "nombre": "Jura de la ConstituciÃ³n"
-        },
-        {
-          "fecha": "2023-08-25",
-          "nombre": "Independencia"
-        },
-        {
           "fecha": "2023-10-12",
-          "nombre": "DÃ­a de la Raza"
+          "nombre": "Día de la Raza"
         },
         {
           "fecha": "2023-11-02",
-          "nombre": "DÃ­a de los Difuntos"
+          "nombre": "Día de los Difuntos"
         },
         {
           "fecha": "2023-12-08",
-          "nombre": "DÃ­a de la Familia"
+          "nombre": "Día de la Familia"
         },
         {
           "fecha": "2023-12-25",
@@ -42,110 +30,18 @@
         },
         {
           "fecha": "2024-01-01",
-          "nombre": "AÃ±o Nuevo"
-        },
-        {
-          "fecha": "2024-02-12",
-          "nombre": "Feriado"
-        },
-        {
-          "fecha": "2024-02-13",
-          "nombre": "Feriado"
-        },
-        {
-          "fecha": "2024-03-28",
-          "nombre": "Feriado"
-        },
-        {
-          "fecha": "2024-03-29",
-          "nombre": "Feriado"
-        },
-        {
-          "fecha": "2024-04-19",
-          "nombre": "Desembarco 33 Orientales"
-        },
-        {
-          "fecha": "2024-05-01",
-          "nombre": "DÃ­a del Trabajo"
+          "nombre": "Año Nuevo"
         }
       ],
       "faseDias": {
         "inicio": 0,
-        "integracion": 0,
-        "implementacion": 134,
-        "sit": 37,
-        "uat": 147,
+        "integracion": 53,
+        "implementacion": 5,
+        "sit": 53,
+        "uat": 57,
         "cutover": 0,
         "golive": 1,
         "hypercare": 0
-      }
-    },
-    {
-      "nombre": "SIOM PARAGUAY SA (801223385) - Smart Supply",
-      "producto": "Smart Supply",
-      "pais": "Paraguay",
-      "fechaInicio": "2026-03-05",
-      "fechaFinPlan": "2026-06-12",
-      "fechaFinReal": "",
-      "diasPlan": 68,
-      "diasReal": 68,
-      "feriadosPeriodo": [
-        {
-          "fecha": "2026-04-02",
-          "nombre": "Feriado"
-        },
-        {
-          "fecha": "2026-04-03",
-          "nombre": "Feriado"
-        },
-        {
-          "fecha": "2026-05-01",
-          "nombre": "DÃ­a del Trabajo"
-        },
-        {
-          "fecha": "2026-05-18",
-          "nombre": "Batalla de Las Piedras"
-        }
-      ],
-      "faseDias": {
-        "inicio": 0,
-        "integracion": 23,
-        "implementacion": 46,
-        "sit": 0,
-        "uat": 7,
-        "cutover": 0,
-        "golive": 1,
-        "hypercare": 0
-      }
-    },
-    {
-      "nombre": "CARGILL URUGUAY SA (215028510012) - API - RecepciÃ³n",
-      "producto": "API RecepciÃ³n",
-      "pais": "Uruguay",
-      "fechaInicio": "2026-05-05",
-      "fechaFinPlan": "2026-07-08",
-      "fechaFinReal": "",
-      "diasPlan": 45,
-      "diasReal": 45,
-      "feriadosPeriodo": [
-        {
-          "fecha": "2026-05-18",
-          "nombre": "Batalla de Las Piedras"
-        },
-        {
-          "fecha": "2026-06-19",
-          "nombre": "Natalicio de Artigas"
-        }
-      ],
-      "faseDias": {
-        "inicio": 4,
-        "integracion": 6,
-        "implementacion": 12,
-        "sit": 6,
-        "uat": 6,
-        "cutover": 2,
-        "golive": 1,
-        "hypercare": 9
       }
     },
     {
@@ -177,15 +73,93 @@
         "golive": 1,
         "hypercare": 9
       }
+    },
+    {
+      "nombre": "Grupo Latam (214182520016, 210327260017, 216865230012, 215976360013) - Recepción - xDoc",
+      "producto": "xDoc Global",
+      "pais": "Uruguay",
+      "fechaInicio": "2023-05-30",
+      "fechaFinPlan": "2024-05-20",
+      "fechaFinReal": "",
+      "diasPlan": 241,
+      "diasReal": 241,
+      "feriadosPeriodo": [
+        {
+          "fecha": "2023-06-19",
+          "nombre": "Natalicio de Artigas"
+        },
+        {
+          "fecha": "2023-07-18",
+          "nombre": "Jura de la Constitución"
+        },
+        {
+          "fecha": "2023-08-25",
+          "nombre": "Independencia"
+        },
+        {
+          "fecha": "2023-10-12",
+          "nombre": "Día de la Raza"
+        },
+        {
+          "fecha": "2023-11-02",
+          "nombre": "Día de los Difuntos"
+        },
+        {
+          "fecha": "2023-12-08",
+          "nombre": "Día de la Familia"
+        },
+        {
+          "fecha": "2023-12-25",
+          "nombre": "Navidad"
+        },
+        {
+          "fecha": "2024-01-01",
+          "nombre": "Año Nuevo"
+        },
+        {
+          "fecha": "2024-02-12",
+          "nombre": "Feriado"
+        },
+        {
+          "fecha": "2024-02-13",
+          "nombre": "Feriado"
+        },
+        {
+          "fecha": "2024-03-28",
+          "nombre": "Feriado"
+        },
+        {
+          "fecha": "2024-03-29",
+          "nombre": "Feriado"
+        },
+        {
+          "fecha": "2024-04-19",
+          "nombre": "Desembarco 33 Orientales"
+        },
+        {
+          "fecha": "2024-05-01",
+          "nombre": "Día del Trabajo"
+        }
+      ],
+      "faseDias": {
+        "inicio": 0,
+        "integracion": 0,
+        "implementacion": 134,
+        "sit": 37,
+        "uat": 147,
+        "cutover": 0,
+        "golive": 1,
+        "hypercare": 0
+      }
     }
   ],
   "estimaciones": {
     "xDoc Global": {
       "inicio": 3,
-      "integracion": 5,
-      "implementacion": 134,
-      "sit": 37,
-      "uat": 147,
+      "integracion": 53,
+      "implementacion": 70,
+      "sit": 45,
+      "uat": 102,
       "cutover": 2,
       "golive": 1,
       "hypercare": 7
@@ -200,7 +174,7 @@
       "golive": 1,
       "hypercare": 10
     },
-    "API EmisiÃ³n": {
+    "API Emisión": {
       "inicio": 2,
       "integracion": 8,
       "implementacion": 12,
@@ -210,7 +184,7 @@
       "golive": 1,
       "hypercare": 7
     },
-    "API RecepciÃ³n": {
+    "API Recepción": {
       "inicio": 4,
       "integracion": 6,
       "implementacion": 12,
@@ -242,33 +216,13 @@
     },
     "Smart Supply": {
       "inicio": 4,
-      "integracion": 23,
-      "implementacion": 46,
+      "integracion": 8,
+      "implementacion": 15,
       "sit": 7,
       "uat": 7,
       "cutover": 3,
       "golive": 1,
       "hypercare": 10
-    },
-    "API Emisión": {
-      "inicio": 2,
-      "integracion": 8,
-      "implementacion": 12,
-      "sit": 6,
-      "uat": 5,
-      "cutover": 2,
-      "golive": 1,
-      "hypercare": 7
-    },
-    "API Recepción": {
-      "inicio": 4,
-      "integracion": 6,
-      "implementacion": 12,
-      "sit": 6,
-      "uat": 6,
-      "cutover": 2,
-      "golive": 1,
-      "hypercare": 9
     }
   },
   "multPaises": {
@@ -278,20 +232,21 @@
     "Chile": 1,
     "Brasil": 1.3,
     "Colombia": 1.1,
-    "MÃ©xico": 1.2,
-    "PerÃº": 1.1,
+    "México": 1.2,
+    "Perú": 1.1,
     "Bolivia": 1.15,
     "Otro": 1.1
   },
   "estFuente": {
-    "xDoc Global": "historial (1 proy.)",
+    "xDoc Global": "historial (2 proy.)",
     "ioFacturo": "default",
     "API EmisiÃ³n": "default",
     "API RecepciÃ³n": "historial (1 proy.)",
     "xPos": "default",
     "SSO": "default",
-    "Smart Supply": "historial (1 proy.)",
-    "API Recepción": "historial (1 proy.)"
+    "Smart Supply": "default",
+    "API Recepción": "historial (1 proy.)",
+    "API Emisión": "default"
   },
   "equipoDB": []
 }
