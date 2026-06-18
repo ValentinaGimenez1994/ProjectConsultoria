@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "lastSaved": "2026-06-18T20:15:36.559Z",
+  "lastSaved": "2026-06-18T20:16:32.094Z",
   "historial": [
     {
       "nombre": "Bontarden SA (218512720016) - Set Básico - xDoc",
@@ -270,6 +270,17 @@
         "Bolivia"
       ],
       "email": "valentina.gimenez@gosocket.net"
+    },
+    {
+      "id": 3,
+      "nombre": "Fiorella Gómez Sánchez",
+      "rol": "Account Manager",
+      "paises": [
+        "Paraguay",
+        "Uruguay",
+        "Bolivia"
+      ],
+      "email": "fiorella.gomez-sanchez@gosocket.net"
     }
   ]
 }
