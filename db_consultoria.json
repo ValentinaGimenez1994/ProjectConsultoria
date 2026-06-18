@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "lastSaved": "2026-06-18T20:13:34.320Z",
+  "lastSaved": "2026-06-18T20:15:09.485Z",
   "historial": [
     {
       "nombre": "Bontarden SA (218512720016) - Set Básico - xDoc",
@@ -248,5 +248,17 @@
     "API Recepción": "historial (1 proy.)",
     "API Emisión": "default"
   },
-  "equipoDB": []
+  "equipoDB": [
+    {
+      "id": 1,
+      "nombre": "Ana Machado",
+      "rol": "Consultor",
+      "paises": [
+        "Paraguay",
+        "Uruguay",
+        "Bolivia"
+      ],
+      "email": "ana.machado@gosocket.net"
+    }
+  ]
 }
