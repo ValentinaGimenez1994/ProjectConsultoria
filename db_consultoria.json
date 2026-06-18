@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "lastSaved": "2026-06-18T20:15:09.485Z",
+  "lastSaved": "2026-06-18T20:15:36.559Z",
   "historial": [
     {
       "nombre": "Bontarden SA (218512720016) - Set Básico - xDoc",
@@ -259,6 +259,17 @@
         "Bolivia"
       ],
       "email": "ana.machado@gosocket.net"
+    },
+    {
+      "id": 2,
+      "nombre": "Valentina Gimenez",
+      "rol": "PMO",
+      "paises": [
+        "Paraguay",
+        "Uruguay",
+        "Bolivia"
+      ],
+      "email": "valentina.gimenez@gosocket.net"
     }
   ]
 }
