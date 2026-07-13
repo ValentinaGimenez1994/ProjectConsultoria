@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "lastSaved": "2026-07-13T18:32:55.075Z",
+  "lastSaved": "2026-07-13T18:42:30.736Z",
   "historial": [
     {
       "nombre": "Bontarden SA (218512720016) - Set Básico - xDoc",
@@ -319,7 +319,330 @@
       "diasSem": 5,
       "buffer": 0,
       "riesgos": [],
-      "templates": {}
+      "templates": {
+        "ioFacturo": [
+          {
+            "nombre": "Fase de Inicio",
+            "resp": "",
+            "lvl": 1,
+            "dias": 0,
+            "horas": 0,
+            "esFase": true,
+            "fase": "Inicio"
+          },
+          {
+            "nombre": "Reunión de Kick Off",
+            "resp": "Cliente-Gosocket",
+            "lvl": 2,
+            "dias": 1,
+            "horas": 1,
+            "fase": "Inicio"
+          },
+          {
+            "nombre": "Entrega documentación",
+            "resp": "Gosocket",
+            "lvl": 2,
+            "dias": 1,
+            "horas": 0.3,
+            "fase": "Inicio"
+          },
+          {
+            "nombre": "Análisis de Impacto",
+            "resp": "Gosocket",
+            "lvl": 2,
+            "dias": 2,
+            "horas": 16,
+            "fase": "Inicio"
+          },
+          {
+            "nombre": "Presentación de estimado de tiempos",
+            "resp": "Gosocket",
+            "lvl": 3,
+            "dias": 1,
+            "horas": 4,
+            "fase": "Inicio"
+          },
+          {
+            "nombre": "Ajuste de tiempos en conjunto",
+            "resp": "Cliente-Gosocket",
+            "lvl": 3,
+            "dias": 1,
+            "horas": 4,
+            "fase": "Inicio"
+          },
+          {
+            "nombre": "Aceptación de cronograma y alcance",
+            "resp": "Cliente",
+            "lvl": 3,
+            "dias": 1,
+            "horas": 4,
+            "fase": "Inicio"
+          },
+          {
+            "nombre": "Fase de Integración",
+            "resp": "",
+            "lvl": 1,
+            "dias": 0,
+            "horas": 0,
+            "esFase": true,
+            "fase": "Integración"
+          },
+          {
+            "nombre": "Definición de archivo de integración",
+            "resp": "Cliente-Gosocket",
+            "lvl": 2,
+            "dias": 1,
+            "horas": 8,
+            "fase": "Integración"
+          },
+          {
+            "nombre": "Entrega de modelo de archivo",
+            "resp": "Gosocket",
+            "lvl": 2,
+            "dias": 1,
+            "horas": 8,
+            "fase": "Integración"
+          },
+          {
+            "nombre": "Desarrollo y envío de archivo",
+            "resp": "Cliente",
+            "lvl": 2,
+            "dias": 5,
+            "horas": 40,
+            "fase": "Integración"
+          },
+          {
+            "nombre": "Recepción y revisión del archivo",
+            "resp": "Gosocket",
+            "lvl": 2,
+            "dias": 2,
+            "horas": 16,
+            "fase": "Integración"
+          },
+          {
+            "nombre": "Ajustes en el archivo de integración",
+            "resp": "Cliente-Gosocket",
+            "lvl": 2,
+            "dias": 3,
+            "horas": 24,
+            "fase": "Integración"
+          },
+          {
+            "nombre": "Aprobación conjunta y cierre",
+            "resp": "Cliente-Gosocket",
+            "lvl": 2,
+            "dias": 1,
+            "horas": 4,
+            "fase": "Integración"
+          },
+          {
+            "nombre": "Fase de Implementación",
+            "resp": "",
+            "lvl": 1,
+            "dias": 0,
+            "horas": 0,
+            "esFase": true,
+            "fase": "Implementación"
+          },
+          {
+            "nombre": "Capacitación a administradores",
+            "resp": "Gosocket",
+            "lvl": 2,
+            "dias": 1,
+            "horas": 8,
+            "fase": "Implementación"
+          },
+          {
+            "nombre": "Validación de requisitos en ambiente",
+            "resp": "Gosocket",
+            "lvl": 2,
+            "dias": 1,
+            "horas": 8,
+            "fase": "Implementación"
+          },
+          {
+            "nombre": "Instalación y Configuración en ambiente QA",
+            "resp": "Gosocket",
+            "lvl": 2,
+            "dias": 3,
+            "horas": 24,
+            "fase": "Implementación"
+          },
+          {
+            "nombre": "Fase de SIT",
+            "resp": "",
+            "lvl": 1,
+            "dias": 0,
+            "horas": 0,
+            "esFase": true,
+            "fase": "SIT"
+          },
+          {
+            "nombre": "Pruebas de Integración (SIT)",
+            "resp": "Cliente-Gosocket",
+            "lvl": 2,
+            "dias": 3,
+            "horas": 24,
+            "fase": "SIT"
+          },
+          {
+            "nombre": "e-Factura",
+            "resp": "",
+            "lvl": 3,
+            "dias": 1,
+            "horas": 8,
+            "fase": "SIT"
+          },
+          {
+            "nombre": "e-Ticket",
+            "resp": "",
+            "lvl": 3,
+            "dias": 1,
+            "horas": 8,
+            "fase": "SIT"
+          },
+          {
+            "nombre": "Aprobación SIT",
+            "resp": "Cliente",
+            "lvl": 2,
+            "dias": 1,
+            "horas": 4,
+            "fase": "SIT"
+          },
+          {
+            "nombre": "Fase de UAT",
+            "resp": "",
+            "lvl": 1,
+            "dias": 0,
+            "horas": 0,
+            "esFase": true,
+            "fase": "UAT"
+          },
+          {
+            "nombre": "Pruebas de Usuario (UAT)",
+            "resp": "Cliente",
+            "lvl": 2,
+            "dias": 3,
+            "horas": 24,
+            "fase": "UAT"
+          },
+          {
+            "nombre": "e-Factura",
+            "resp": "",
+            "lvl": 3,
+            "dias": 1,
+            "horas": 8,
+            "fase": "UAT"
+          },
+          {
+            "nombre": "e-Ticket",
+            "resp": "",
+            "lvl": 3,
+            "dias": 1,
+            "horas": 8,
+            "fase": "UAT"
+          },
+          {
+            "nombre": "Reportes diarios",
+            "resp": "",
+            "lvl": 3,
+            "dias": 1,
+            "horas": 8,
+            "fase": "UAT"
+          },
+          {
+            "nombre": "Aprobación de UAT",
+            "resp": "Cliente",
+            "lvl": 2,
+            "dias": 1,
+            "horas": 4,
+            "fase": "UAT"
+          },
+          {
+            "nombre": "Fase de Cutover",
+            "resp": "",
+            "lvl": 1,
+            "dias": 0,
+            "horas": 0,
+            "esFase": true,
+            "fase": "Cutover"
+          },
+          {
+            "nombre": "Solicitud de CAEs de Producción",
+            "resp": "Cliente-Gosocket",
+            "lvl": 2,
+            "dias": 1,
+            "horas": 8,
+            "fase": "Cutover"
+          },
+          {
+            "nombre": "Entrega de parámetros de comunicación en PRD",
+            "resp": "Gosocket",
+            "lvl": 2,
+            "dias": 1,
+            "horas": 8,
+            "fase": "Cutover"
+          },
+          {
+            "nombre": "Configuración del ERP del cliente",
+            "resp": "Cliente",
+            "lvl": 2,
+            "dias": 2,
+            "horas": 16,
+            "fase": "Cutover"
+          },
+          {
+            "nombre": "Fase de Go Live",
+            "resp": "",
+            "lvl": 1,
+            "dias": 0,
+            "horas": 0,
+            "esFase": true,
+            "fase": "Go Live"
+          },
+          {
+            "nombre": "GoLive",
+            "resp": "Cliente-Gosocket",
+            "lvl": 2,
+            "dias": 1,
+            "horas": 8,
+            "fase": "Go Live"
+          },
+          {
+            "nombre": "Monitoreo de la Operación",
+            "resp": "Gosocket",
+            "lvl": 2,
+            "dias": 5,
+            "horas": 5,
+            "fase": "Go Live"
+          },
+          {
+            "nombre": "Fase de Hypercare",
+            "resp": "",
+            "lvl": 1,
+            "dias": 0,
+            "horas": 0,
+            "esFase": true,
+            "fase": "Hypercare"
+          },
+          {
+            "nombre": "Aprobación de Documentación de Cierre",
+            "resp": "Cliente",
+            "lvl": 2,
+            "dias": 3,
+            "horas": 24,
+            "fase": "Hypercare"
+          },
+          {
+            "nombre": "Pasaje de servicio activo a Soporte",
+            "resp": "Gosocket",
+            "lvl": 2,
+            "dias": 1,
+            "horas": 4,
+            "fase": "Hypercare"
+          }
+        ]
+      }
     }
   }
 }
