@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "lastSaved": "2026-06-18T20:19:38.785Z",
+  "lastSaved": "2026-07-13T18:32:43.622Z",
   "historial": [
     {
       "nombre": "Bontarden SA (218512720016) - Set Básico - xDoc",
@@ -151,6 +151,36 @@
         "golive": 1,
         "hypercare": 0
       }
+    },
+    {
+      "nombre": "H & M Hennes & Mauritz GBC AB (801565286) - FE, NC, ND, AF, NR - ioFacturo",
+      "producto": "ioFacturo",
+      "pais": "Paraguay",
+      "fechaInicio": "2025-10-10",
+      "fechaFinPlan": "2025-12-29",
+      "fechaFinReal": "",
+      "diasPlan": 55,
+      "diasReal": 55,
+      "feriadosPeriodo": [
+        {
+          "fecha": "2025-12-08",
+          "nombre": "Día de la Familia"
+        },
+        {
+          "fecha": "2025-12-25",
+          "nombre": "Navidad"
+        }
+      ],
+      "faseDias": {
+        "inicio": 4,
+        "integracion": 7,
+        "implementacion": 14,
+        "sit": 7,
+        "uat": 7,
+        "cutover": 3,
+        "golive": 2,
+        "hypercare": 10
+      }
     }
   ],
   "estimaciones": {
@@ -165,13 +195,13 @@
       "hypercare": 7
     },
     "ioFacturo": {
-      "inicio": 3,
+      "inicio": 4,
       "integracion": 7,
       "implementacion": 14,
       "sit": 7,
       "uat": 7,
       "cutover": 3,
-      "golive": 1,
+      "golive": 2,
       "hypercare": 10
     },
     "API Emisión": {
@@ -239,7 +269,7 @@
   },
   "estFuente": {
     "xDoc Global": "historial (2 proy.)",
-    "ioFacturo": "default",
+    "ioFacturo": "historial (1 proy.)",
     "API EmisiÃ³n": "default",
     "API RecepciÃ³n": "historial (1 proy.)",
     "xPos": "default",
@@ -282,5 +312,14 @@
       ],
       "email": "fiorella.gomez-sanchez@gosocket.net"
     }
-  ]
+  ],
+  "configDB": {
+    "Paraguay": {
+      "horas": 8,
+      "diasSem": 5,
+      "buffer": 0,
+      "riesgos": [],
+      "templates": {}
+    }
+  }
 }
