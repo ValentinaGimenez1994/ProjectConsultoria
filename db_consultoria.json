@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "lastSaved": "2026-07-14T20:51:27.595Z",
+  "lastSaved": "2026-07-14T20:53:59.757Z",
   "historial": [
     {
       "nombre": "Bontarden SA (218512720016) - Set Básico - xDoc",
@@ -359,15 +359,15 @@
             "resp": "Gosocket",
             "lvl": 3,
             "dias": 1,
-            "horas": 4,
+            "horas": 1,
             "fase": "Inicio"
           },
           {
             "nombre": "Ajuste de tiempos en conjunto",
             "resp": "Cliente-Gosocket",
             "lvl": 3,
-            "dias": 1,
-            "horas": 4,
+            "dias": 4,
+            "horas": 2,
             "fase": "Inicio"
           },
           {
@@ -375,7 +375,7 @@
             "resp": "Cliente",
             "lvl": 3,
             "dias": 1,
-            "horas": 4,
+            "horas": 8,
             "fase": "Inicio"
           },
           {
@@ -385,54 +385,6 @@
             "dias": 0,
             "horas": 0,
             "esFase": true,
-            "fase": "Integración"
-          },
-          {
-            "nombre": "Definición de archivo de integración",
-            "resp": "Cliente-Gosocket",
-            "lvl": 2,
-            "dias": 1,
-            "horas": 8,
-            "fase": "Integración"
-          },
-          {
-            "nombre": "Entrega de modelo de archivo",
-            "resp": "Gosocket",
-            "lvl": 2,
-            "dias": 1,
-            "horas": 8,
-            "fase": "Integración"
-          },
-          {
-            "nombre": "Desarrollo y envío de archivo",
-            "resp": "Cliente",
-            "lvl": 2,
-            "dias": 5,
-            "horas": 40,
-            "fase": "Integración"
-          },
-          {
-            "nombre": "Recepción y revisión del archivo",
-            "resp": "Gosocket",
-            "lvl": 2,
-            "dias": 2,
-            "horas": 16,
-            "fase": "Integración"
-          },
-          {
-            "nombre": "Ajustes en el archivo de integración",
-            "resp": "Cliente-Gosocket",
-            "lvl": 2,
-            "dias": 3,
-            "horas": 24,
-            "fase": "Integración"
-          },
-          {
-            "nombre": "Aprobación conjunta y cierre",
-            "resp": "Cliente-Gosocket",
-            "lvl": 2,
-            "dias": 1,
-            "horas": 4,
             "fase": "Integración"
           },
           {
