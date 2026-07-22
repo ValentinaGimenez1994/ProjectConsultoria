@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "lastSaved": "2026-07-22T14:12:08.204Z",
+  "lastSaved": "2026-07-22T14:12:39.984Z",
   "historial": [
     {
       "nombre": "Bontarden SA (218512720016) - Set Básico - xDoc",
@@ -314,7 +314,7 @@
   "serviciosCfgPais": {
     "Paraguay": [
       {
-        "nombre": "Nueva tarea",
+        "nombre": "Habilitar ambiente QA (ioFacturo)",
         "horas": 8
       }
     ]
