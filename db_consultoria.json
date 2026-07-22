@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "lastSaved": "2026-07-22T15:33:57.202Z",
+  "lastSaved": "2026-07-22T15:35:19.760Z",
   "historial": [
     {
       "nombre": "Bontarden SA (218512720016) - Set Básico - xDoc",
@@ -311,5 +311,12 @@
       "horas": 4
     }
   ],
-  "serviciosCfgPais": {}
+  "serviciosCfgPais": {
+    "Paraguay": [
+      {
+        "nombre": "",
+        "horas": 8
+      }
+    ]
+  }
 }
