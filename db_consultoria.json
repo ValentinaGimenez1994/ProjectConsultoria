@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "lastSaved": "2026-07-22T18:50:09.046Z",
+  "lastSaved": "2026-07-22T18:50:14.772Z",
   "historial": [
     {
       "nombre": "Bontarden SA (218512720016) - Set Básico - xDoc",
@@ -327,7 +327,7 @@
       },
       {
         "nombre": "Pase a producción (ioFacturo)",
-        "horas": 8
+        "horas": 0.3
       }
     ]
   }
