@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "lastSaved": "2026-07-22T18:49:33.466Z",
+  "lastSaved": "2026-07-22T18:49:40.484Z",
   "historial": [
     {
       "nombre": "Bontarden SA (218512720016) - Set Básico - xDoc",
@@ -323,7 +323,7 @@
       },
       {
         "nombre": "Acompañamiento en pruebas (ioFacturo)",
-        "horas": 8
+        "horas": 1
       }
     ]
   }
