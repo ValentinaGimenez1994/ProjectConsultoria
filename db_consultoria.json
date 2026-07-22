@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "lastSaved": "2026-07-22T18:47:37.234Z",
+  "lastSaved": "2026-07-22T18:47:44.244Z",
   "historial": [
     {
       "nombre": "Bontarden SA (218512720016) - Set Básico - xDoc",
@@ -319,7 +319,7 @@
       },
       {
         "nombre": "Adición de 1 campo personalizado a 1 tipo de CFE (1 TAX ID)",
-        "horas": 8
+        "horas": 0.3
       }
     ]
   }
