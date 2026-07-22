@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "lastSaved": "2026-07-22T19:04:15.753Z",
+  "lastSaved": "2026-07-22T20:37:35.478Z",
   "historial": [
     {
       "nombre": "Bontarden SA (218512720016) - Set Básico - xDoc",
@@ -282,31 +282,39 @@
   "configDB": {},
   "servicios": [
     {
-      "id": 1784747038603,
-      "nombre": "Adición de Fecha de Vencimiento (personalizado) a PDFs, 2 TAX ID, FE",
+      "id": 1784752614985,
+      "nombre": "Adición de \"Fecha de Vencimiento\" (personalizado) a PDFs, 2 TAX ID, FE",
       "cliente": "LATAM PY",
       "pais": "Paraguay",
       "consultor": "",
       "fecha": "2026-07-22",
       "tareas": [
         {
-          "nombre": "Habilitación ambiente QA (ioFacturo)",
-          "horas": 0.3
-        },
-        {
-          "nombre": "Adición de 1 campo personalizado a 1 tipo de CFE (1 TAX ID)",
-          "horas": 0.3
-        },
-        {
           "nombre": "Acompañamiento en pruebas (ioFacturo)",
-          "horas": 1
+          "horas": 1,
+          "cantidad": 1,
+          "subtotal": 1
+        },
+        {
+          "nombre": "Habilitación ambiente QA (ioFacturo)",
+          "horas": 0.3,
+          "cantidad": 1,
+          "subtotal": 0.3
         },
         {
           "nombre": "Pase a producción (ioFacturo)",
-          "horas": 0.3
+          "horas": 0.3,
+          "cantidad": 1,
+          "subtotal": 0.3
+        },
+        {
+          "nombre": "Adición de 1 campo personalizado a 1 tipo de CFE (1 TAX ID)",
+          "horas": 0.3,
+          "cantidad": 2,
+          "subtotal": 1
         }
       ],
-      "totalHoras": 1.9000000000000001
+      "totalHoras": 3
     }
   ],
   "serviciosBase": [
@@ -332,7 +340,7 @@
     },
     {
       "nombre": "Capacitación",
-      "horas": 4
+      "horas": 1
     },
     {
       "nombre": "Soporte post-entrega",
