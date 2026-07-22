@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "lastSaved": "2026-07-22T18:50:15.960Z",
+  "lastSaved": "2026-07-22T19:04:15.753Z",
   "historial": [
     {
       "nombre": "Bontarden SA (218512720016) - Set Básico - xDoc",
@@ -280,7 +280,35 @@
   },
   "equipoDB": [],
   "configDB": {},
-  "servicios": [],
+  "servicios": [
+    {
+      "id": 1784747038603,
+      "nombre": "Adición de Fecha de Vencimiento (personalizado) a PDFs, 2 TAX ID, FE",
+      "cliente": "LATAM PY",
+      "pais": "Paraguay",
+      "consultor": "",
+      "fecha": "2026-07-22",
+      "tareas": [
+        {
+          "nombre": "Habilitación ambiente QA (ioFacturo)",
+          "horas": 0.3
+        },
+        {
+          "nombre": "Adición de 1 campo personalizado a 1 tipo de CFE (1 TAX ID)",
+          "horas": 0.3
+        },
+        {
+          "nombre": "Acompañamiento en pruebas (ioFacturo)",
+          "horas": 1
+        },
+        {
+          "nombre": "Pase a producción (ioFacturo)",
+          "horas": 0.3
+        }
+      ],
+      "totalHoras": 1.9000000000000001
+    }
+  ],
   "serviciosBase": [
     {
       "nombre": "Relevamiento inicial",
